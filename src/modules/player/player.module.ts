@@ -8,5 +8,6 @@ import { PlayerRepository } from './player.repository';
   imports: [TypeOrmModule.forFeature([PlayerRepository])],
   controllers: [PlayerController],
   providers: [PlayerService],
+  exports: [PlayerService],
 })
 export class PlayerModule {}

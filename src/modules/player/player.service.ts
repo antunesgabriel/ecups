@@ -4,6 +4,7 @@ import { classToPlain } from 'class-transformer';
 
 import { PlayerRepository } from './player.repository';
 import { PlayerCreateDTO } from './dto/player-create.dto';
+import { PlayerEntity } from '@models/player.entity';
 
 @Injectable()
 export class PlayerService {
@@ -30,5 +31,12 @@ export class PlayerService {
     const saved = await this._playerRepository.save(newPlayer);
 
     return classToPlain(saved);
+  }
+
+  async findByEmail(email: string): Promise<PlayerEntity | null> {
+    return this._playerRepository.findOne({
+      where: { email },
+      relations: ['team', 'leaderOf'],
+    });
   }
 }

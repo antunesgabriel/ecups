@@ -9,6 +9,8 @@ import { multerStorage } from './configs/multerConfigs';
 import { PlayerModule } from './modules/player/player.module';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { TeamModule } from './modules/team/team.module';
+import { ImageModule } from './modules/image/image.module';
+import { AuthModule } from './modules/auth/auth.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 
 @Module({
@@ -18,6 +20,8 @@ import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
     PlayerModule,
     OrganizationModule,
     TeamModule,
+    ImageModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
