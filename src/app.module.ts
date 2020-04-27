@@ -6,12 +6,18 @@ import { Connection } from 'typeorm';
 
 // Local
 import { multerStorage } from './configs/multerConfigs';
+import { PlayerModule } from './modules/player/player.module';
+import { OrganizationModule } from './modules/organization/organization.module';
+import { TeamModule } from './modules/team/team.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 
 @Module({
   imports: [
     TypeOrmModuleConfig,
     MulterModule.register({ storage: multerStorage }),
+    PlayerModule,
+    OrganizationModule,
+    TeamModule,
   ],
   controllers: [AppController],
   providers: [AppService],

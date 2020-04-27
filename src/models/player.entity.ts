@@ -11,6 +11,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { hash, compare, getRounds } from 'bcryptjs';
+import { Exclude } from 'class-transformer';
 import { TeamEntity } from './team.entity';
 import { ChampionshipEntity } from './championship.entity';
 
@@ -29,9 +30,10 @@ export class PlayerEntity {
   public email: string;
 
   @Column({ nullable: false, type: 'varchar' })
+  @Exclude()
   public password: string;
 
-  @Column({ name: 'nickname', type: 'varchar', nullable: false })
+  @Column({ name: 'nickname', type: 'varchar', nullable: false, unique: true })
   public nickName: string;
 
   @Column({ name: 'birth_date', type: 'date', nullable: false })
@@ -56,9 +58,11 @@ export class PlayerEntity {
   public avatar: string;
 
   @CreateDateColumn({ name: 'created_at', nullable: false })
+  @Exclude()
   public createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', default: null })
+  @Exclude()
   public updatedAt: Date;
 
   // Methods
