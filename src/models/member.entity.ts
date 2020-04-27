@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { hash, compare, getRounds } from 'bcryptjs';
 import { OrganizationEntity } from './organization.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'members' })
 export class MemberEntity {
@@ -36,9 +37,11 @@ export class MemberEntity {
   public avatar: string;
 
   @CreateDateColumn({ name: 'created_at', nullable: false })
+  @Exclude()
   public createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', default: null })
+  @Exclude()
   public updatedAt: Date;
 
   // Methods

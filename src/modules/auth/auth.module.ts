@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { PlayerModule } from '@modules/player/player.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { MemberModule } from '@modules/member/member.module';
 
 const secret = process.env.APP_JWT_SECRET;
 const expiresIn = process.env.APP_JWT_EXPIRE;
@@ -13,6 +14,7 @@ const expiresIn = process.env.APP_JWT_EXPIRE;
 @Module({
   imports: [
     PlayerModule,
+    MemberModule,
     PassportModule,
     JwtModule.register({ secret, signOptions: { expiresIn } }),
   ],

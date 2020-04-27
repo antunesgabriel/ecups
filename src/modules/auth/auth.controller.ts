@@ -12,5 +12,9 @@ export class AuthController {
     if (to === 'player') {
       return this._authService.loginPlayer(req.user);
     }
+
+    if (to === 'member') {
+      return this._authService.loginMember(req.user);
+    }
   }
 }

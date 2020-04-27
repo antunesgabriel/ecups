@@ -11,6 +11,7 @@ import { OrganizationModule } from './modules/organization/organization.module';
 import { TeamModule } from './modules/team/team.module';
 import { ImageModule } from './modules/image/image.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { MemberModule } from './modules/member/member.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 
 @Module({
@@ -22,6 +23,7 @@ import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
     TeamModule,
     ImageModule,
     AuthModule,
+    MemberModule,
   ],
   controllers: [AppController],
   providers: [AppService],

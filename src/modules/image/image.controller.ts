@@ -16,13 +16,16 @@ import { ImageService } from './image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerStorage, imageFileFilter } from 'src/configs/multerConfigs';
 import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
+import { UserGuard } from '@guards/user.guard';
+import { Roles } from '@decorators/roles.decorator';
 
 @Controller('image')
 export class ImageController {
   constructor(private readonly _imageService: ImageService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserGuard)
+  @Roles('MEMBER', 'PLAYER')
   @UseInterceptors(
     FileInterceptor('image', {
       storage: multerStorage,
@@ -35,7 +38,7 @@ export class ImageController {
     @Res() res: Response,
     @Request() req,
   ): Promise<Response> {
-    const permitedTo = ['player'];
+    const permitedTo = ['player', 'member'];
 
     if (!to || permitedTo.indexOf(to) === -1) {
       throw new BadRequestException('Destino da imagem inválido');

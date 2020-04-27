@@ -8,13 +8,14 @@ import {
 } from 'typeorm';
 import { MemberEntity } from './member.entity';
 import { ChampionshipEntity } from './championship.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'organizations' })
 export class OrganizationEntity {
   @PrimaryGeneratedColumn({ name: 'organization_id' })
   public organizationId: number;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false, type: 'varchar', unique: true })
   public name: string;
 
   @Column({ nullable: false, type: 'varchar', unique: true })
@@ -30,9 +31,11 @@ export class OrganizationEntity {
   public brand: string;
 
   @CreateDateColumn({ name: 'created_at', nullable: false })
+  @Exclude()
   public createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', default: null })
+  @Exclude()
   public updatedAt: Date;
 
   // Relationships
