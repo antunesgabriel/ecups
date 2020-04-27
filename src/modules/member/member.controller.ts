@@ -1,4 +1,12 @@
-import { Controller, Body, Res, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Res,
+  HttpStatus,
+  UsePipes,
+  ValidationPipe,
+  Post,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 import { MemberService } from './member.service';
@@ -8,6 +16,8 @@ import { MemberCreateDTO } from './dto/member-create.dto';
 export class MemberController {
   constructor(private readonly _memberService: MemberService) {}
 
+  @Post()
+  @UsePipes(ValidationPipe)
   async store(
     @Body() member: MemberCreateDTO,
     @Res() res: Response,

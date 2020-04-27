@@ -17,7 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(request: any, email: string, password: string): Promise<any> {
-    const { to, organization } = request.query;
+    const { to } = request.query;
     const permitedTo = ['player', 'member'];
 
     if (!to || permitedTo.indexOf(to) === -1) {
@@ -33,10 +33,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     // Login para membros de uma organização
 
     if (to === 'member') {
-      if (!organization) {
-        throw new BadRequestException('Organização inválida');
-      }
-
       const member = await this.authService.validateMember(email, password);
 
       return classToPlain(member);

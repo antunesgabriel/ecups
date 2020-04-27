@@ -3,10 +3,10 @@ import { ImageController } from './image.controller';
 import { ImageService } from './image.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlayerRepository } from '@modules/player/player.repository';
-import { MemberRepository } from '@modules/member/member.repository';
+import { MemberModule } from '@modules/member/member.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PlayerRepository, MemberRepository])],
+  imports: [TypeOrmModule.forFeature([PlayerRepository]), MemberModule],
   controllers: [ImageController],
   providers: [ImageService],
 })

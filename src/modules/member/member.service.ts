@@ -35,4 +35,9 @@ export class MemberService {
 
     return member;
   }
+
+  async update(email: string, data: any): Promise<any> {
+    const result = await this._memberRepository.update({ email }, data);
+    return result;
+  }
 }

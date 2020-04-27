@@ -5,15 +5,16 @@ import { OrganizationRepository } from './organization.repository';
 import { OrganizationCreateDTO } from './dto/organization-create.dto';
 import { OrganizationEntity } from '@models/organization.entity';
 import { IMember } from './member.interface';
-import { MemberService } from '@modules/member/member.service';
 import { classToPlain } from 'class-transformer';
+import { MemberRepository } from '@modules/member/member.repository';
 
 @Injectable()
 export class OrganizationService {
   constructor(
     @InjectRepository(OrganizationRepository)
     private readonly _organizationRepository: OrganizationRepository,
-    private readonly _memberService: MemberService,
+    @InjectRepository(MemberRepository)
+    private readonly _memberRepository: MemberRepository,
   ) {}
 
   async create(
@@ -47,7 +48,9 @@ export class OrganizationService {
     }
 
     const newOrganization = this._organizationRepository.create(organization);
-    const addMember = await this._memberService.findByEmail(member.email);
+    const addMember = await this._memberRepository.findOne({
+      email: member.email,
+    });
 
     newOrganization.members = [addMember];
 

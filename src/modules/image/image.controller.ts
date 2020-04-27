@@ -9,6 +9,7 @@ import {
   BadRequestException,
   UseGuards,
   Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -42,6 +43,16 @@ export class ImageController {
 
     if (!to || permitedTo.indexOf(to) === -1) {
       throw new BadRequestException('Destino da imagem inválido');
+    }
+
+    if (to === 'player' && !req.user.isPlayer) {
+      throw new UnauthorizedException('Você não está logado como player');
+    }
+
+    if (to === 'member' && !req.user.isMember) {
+      throw new UnauthorizedException(
+        'Você não está logado como membro de uma organização',
+      );
     }
 
     const message = await this._imageService.save(to, file.filename, req.user);

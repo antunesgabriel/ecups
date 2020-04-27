@@ -28,6 +28,7 @@ export class MemberEntity {
   public email: string;
 
   @Column({ nullable: false, type: 'varchar' })
+  @Exclude()
   public password: string;
 
   @Column({ nullable: false, type: 'boolean', default: true })
