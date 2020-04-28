@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsDateString, IsBoolean } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsDateString,
+  IsBoolean,
+  IsOptional,
+} from 'class-validator';
 
 export class ChampionshipCreateDTO {
   @IsNotEmpty({ message: 'Informe um nome para o campeonato' })
@@ -15,14 +21,16 @@ export class ChampionshipCreateDTO {
 
   @IsNotEmpty({ message: 'Informe a data de inicio das inscrições' })
   @IsDateString({ message: 'Data de inicio das inscrições inválida' })
-  registrationsStart: Date;
+  registrationsStart: string;
 
+  @IsOptional()
   @IsDateString({ message: 'Data de fim das inscrições inválida' })
-  registrationsEnd: Date;
+  registrationsEnd: string;
 
   // @IsNotEmpty({ message: 'Informe a data de inicio do campeonato' })
+  @IsOptional()
   @IsDateString({ message: 'Data de inicio do campeonato inválida' })
-  start: Date;
+  start: string;
 
   @IsNotEmpty({
     message: 'Informe se o campeonato é para time ou jogadores individuais',

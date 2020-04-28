@@ -18,7 +18,7 @@ export class ChampionshipEntity {
   @PrimaryGeneratedColumn({ name: 'championship_id' })
   public championshipId: number;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false, type: 'varchar', unique: true })
   public name: string;
 
   @Column({ nullable: false, type: 'text' })
@@ -27,13 +27,21 @@ export class ChampionshipEntity {
   @Column({ nullable: false, type: 'text' })
   public rules: string;
 
-  @Column({ nullable: false, name: 'registrations_star', type: 'timestamp' })
+  @Column({
+    nullable: false,
+    name: 'registrations_star',
+    type: 'timestamp',
+  })
   public registrationsStart: Date;
 
-  @Column({ nullable: false, name: 'registrations_end', type: 'timestamp' })
+  @Column({
+    nullable: true,
+    name: 'registrations_end',
+    type: 'timestamp',
+  })
   public registrationsEnd: Date;
 
-  @Column({ nullable: false, type: 'timestamp' })
+  @Column({ nullable: true, type: 'timestamp' })
   public start: Date;
 
   @Column({ nullable: false, name: 'for_teams', default: true })

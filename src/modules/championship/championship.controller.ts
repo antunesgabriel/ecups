@@ -10,6 +10,8 @@ import {
   Delete,
   Param,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -45,6 +47,7 @@ export class ChampionshipController {
 
   @Post()
   @UseGuards(JwtAuthGuard, UserGuard)
+  @UsePipes(ValidationPipe)
   @Roles('MEMBER')
   async store(
     @Res() res: Response,
@@ -75,6 +78,7 @@ export class ChampionshipController {
 
   @Put(':championshipId')
   @UseGuards(JwtAuthGuard, UserGuard)
+  @UsePipes(ValidationPipe)
   @Roles('MEMBER')
   async update(
     @Res() res: Response,
@@ -82,7 +86,7 @@ export class ChampionshipController {
     @Param('championshipId') championshipId: number,
     @Body() championship: ChampionshipCreateDTO,
   ): Promise<Response> {
-    const message = this._championshipService.update(
+    const message = await this._championshipService.update(
       championshipId,
       member,
       championship,
@@ -91,7 +95,7 @@ export class ChampionshipController {
     return res.status(HttpStatus.OK).json(message);
   }
 
-  @Get('/championships')
+  @Get('/all')
   async all(
     @Query('page') page = 1,
     @Query('limit') limit = 10,

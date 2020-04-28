@@ -5,12 +5,14 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { isBefore, add, parseISO } from 'date-fns';
 
 import { ChampionshipRepository } from './championship.repository';
 import { IMember } from '@utils/member.interface';
 import { ChampionshipEntity } from '@models/championship.entity';
 import { OrganizationService } from '@modules/organization/organization.service';
 import { ChampionshipCreateDTO } from './dto/championship-create.dto';
+import validateDatesChampionship from '@helpers/validateDatesChampionship';
 
 @Injectable()
 export class ChampionshipService {
@@ -27,7 +29,8 @@ export class ChampionshipService {
     const query = this._championshipRepository.createQueryBuilder('champ');
 
     query
-      .where('champ.organization.nickname = :organization', {
+      .innerJoin('champ.organization', 'organization')
+      .where('organization.nickname = :organization', {
         organization: member.organization,
       })
       .orderBy('champ.createdAt', 'DESC');
@@ -39,11 +42,28 @@ export class ChampionshipService {
     championship: ChampionshipCreateDTO,
     member: IMember,
   ): Promise<any> {
+    const {
+      registrationsEnd,
+      registrationsStart,
+      start,
+    } = validateDatesChampionship(championship);
+
     const organization = await this._organizationService.findByNickname(
       member.organization,
     );
 
-    const newChampionship = this._championshipRepository.create(championship);
+    if (
+      await this._championshipRepository.findOne({ name: championship.name })
+    ) {
+      throw new BadRequestException('Já existe um campeonato com este nome');
+    }
+
+    const newChampionship = this._championshipRepository.create({
+      ...championship,
+      start,
+      registrationsEnd,
+      registrationsStart,
+    });
     newChampionship.organization = organization;
     const saved = await this._championshipRepository.save(newChampionship);
 
@@ -72,13 +92,27 @@ export class ChampionshipService {
     member: IMember,
     championship: ChampionshipCreateDTO,
   ): Promise<any> {
+    const {
+      registrationsEnd,
+      registrationsStart,
+      start,
+    } = validateDatesChampionship(championship);
+
     const organization = await this._organizationService.findByNickname(
       member.organization,
     );
 
+    if (
+      await this._championshipRepository.findOne({
+        where: `championship_id != ${championshipId} AND name = '${championship.name}'`,
+      })
+    ) {
+      throw new BadRequestException('Já existe um campeonato com este nome');
+    }
+
     const result = await this._championshipRepository.update(
       { championshipId, organization },
-      championship,
+      { ...championship, registrationsStart, registrationsEnd, start },
     );
 
     if (result.affected) {
@@ -96,10 +130,12 @@ export class ChampionshipService {
     query
       .innerJoinAndSelect('champ.organization', 'organization')
       .where(
-        'champ.active = :active  AND champ.organization.active = :orgActive',
+        'champ.active = :active  AND organization.active = :orgActive AND champ.registrationsStart BETWEEN :initIns AND :endIns',
         {
           active: true,
           orgActive: true,
+          initIns: new Date(),
+          endIns: add(new Date(), { years: 1 }),
         },
       )
       .orderBy('champ.createdAt', 'DESC');
