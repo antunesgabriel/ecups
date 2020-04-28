@@ -12,6 +12,7 @@ import { TeamModule } from './modules/team/team.module';
 import { ImageModule } from './modules/image/image.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MemberModule } from './modules/member/member.module';
+import { ChampionshipModule } from './modules/championship/championship.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 
 @Module({
@@ -24,6 +25,7 @@ import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
     ImageModule,
     AuthModule,
     MemberModule,
+    ChampionshipModule,
   ],
   controllers: [AppController],
   providers: [AppService],

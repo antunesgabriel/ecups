@@ -39,9 +39,6 @@ export class ChampionshipEntity {
   @Column({ nullable: false, name: 'for_teams', default: true })
   public forTeams: boolean;
 
-  @Column({ nullable: false, name: 'for_players', default: false })
-  public forPlayers: boolean;
-
   @Column({ nullable: false, default: 0, type: 'float' })
   public rate: number;
 

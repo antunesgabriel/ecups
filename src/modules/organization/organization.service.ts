@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OrganizationRepository } from './organization.repository';
 import { OrganizationCreateDTO } from './dto/organization-create.dto';
 import { OrganizationEntity } from '@models/organization.entity';
-import { IMember } from './member.interface';
+import { IMember } from '@utils/member.interface';
 import { classToPlain } from 'class-transformer';
 import { MemberRepository } from '@modules/member/member.repository';
 
