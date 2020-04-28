@@ -7,6 +7,9 @@ import {
   Query,
   Post,
   Body,
+  Delete,
+  Param,
+  Put,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -48,7 +51,59 @@ export class ChampionshipController {
     @User() member: IMember,
     @Body() championship: ChampionshipCreateDTO,
   ): Promise<Response> {
-    const message = this._championshipService.create(championship, member);
+    const message = await this._championshipService.create(
+      championship,
+      member,
+    );
     return res.status(HttpStatus.OK).json(message);
+  }
+
+  @Delete(':championshipId')
+  @UseGuards(JwtAuthGuard, UserGuard)
+  @Roles('MEMBER')
+  async destrroy(
+    @Res() res: Response,
+    @User() member: IMember,
+    @Param('championshipId') championshipId: number,
+  ): Promise<Response> {
+    const message = await this._championshipService.destroy(
+      championshipId,
+      member,
+    );
+    return res.status(HttpStatus.OK).json(message);
+  }
+
+  @Put(':championshipId')
+  @UseGuards(JwtAuthGuard, UserGuard)
+  @Roles('MEMBER')
+  async update(
+    @Res() res: Response,
+    @User() member: IMember,
+    @Param('championshipId') championshipId: number,
+    @Body() championship: ChampionshipCreateDTO,
+  ): Promise<Response> {
+    const message = this._championshipService.update(
+      championshipId,
+      member,
+      championship,
+    );
+
+    return res.status(HttpStatus.OK).json(message);
+  }
+
+  @Get('/championships')
+  async all(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Res() res: Response,
+  ): Promise<Response> {
+    limit = limit > 20 ? 20 : limit;
+
+    const list = await this._championshipService.paginateAll({
+      page,
+      limit,
+      route: '/championships',
+    });
+    return res.status(HttpStatus.OK).json(list);
   }
 }
