@@ -7,10 +7,9 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
-  ManyToMany,
 } from 'typeorm';
 import { PlayerEntity } from './player.entity';
-import { ChampionshipEntity } from './championship.entity';
+import { RegisterTeam } from './registerTeam.entity';
 
 @Entity({ name: 'teams' })
 export class TeamEntity {
@@ -49,9 +48,9 @@ export class TeamEntity {
   )
   public members: PlayerEntity[];
 
-  @ManyToMany(
-    () => ChampionshipEntity,
-    championship => championship.teams,
+  @OneToMany(
+    () => RegisterTeam,
+    register => register.team,
   )
-  public championships: ChampionshipEntity[];
+  public registrations: RegisterTeam[];
 }

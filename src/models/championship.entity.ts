@@ -8,10 +8,13 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { OrganizationEntity } from './organization.entity';
 import { PlayerEntity } from './player.entity';
 import { TeamEntity } from './team.entity';
+import { RegisterTeam } from './registerTeam.entity';
+import { RegisterPlayer } from './registerPlayer.entity';
 
 @Entity({ name: 'championships' })
 export class ChampionshipEntity {
@@ -68,17 +71,15 @@ export class ChampionshipEntity {
   @JoinColumn({ name: 'organization_id' })
   public organization: OrganizationEntity;
 
-  @ManyToMany(
-    () => PlayerEntity,
-    player => player.championships,
+  @OneToMany(
+    () => RegisterTeam,
+    registerTeam => registerTeam.championship,
   )
-  @JoinTable({ name: 'championships_players' })
-  public players: PlayerEntity[];
+  public registeredTeams: RegisterTeam[];
 
-  @ManyToMany(
-    () => TeamEntity,
-    team => team.championships,
+  @OneToMany(
+    () => RegisterPlayer,
+    registerPlayer => registerPlayer.championship,
   )
-  @JoinTable({ name: 'championships_teams' })
-  public teams: TeamEntity[];
+  public registeredPlayers: RegisterPlayer[];
 }

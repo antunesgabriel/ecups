@@ -8,12 +8,13 @@ import {
   BeforeUpdate,
   ManyToOne,
   OneToOne,
-  ManyToMany,
+  OneToMany,
 } from 'typeorm';
 import { hash, compare, getRounds } from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import { TeamEntity } from './team.entity';
-import { ChampionshipEntity } from './championship.entity';
+
+import { RegisterPlayer } from './registerPlayer.entity';
 
 @Entity({ name: 'players' })
 export class PlayerEntity {
@@ -95,9 +96,9 @@ export class PlayerEntity {
   )
   public leaderOf: TeamEntity;
 
-  @ManyToMany(
-    () => ChampionshipEntity,
-    championship => championship.players,
+  @OneToMany(
+    () => RegisterPlayer,
+    register => register.player,
   )
-  public championships: ChampionshipEntity[];
+  public registrations: RegisterPlayer[];
 }
