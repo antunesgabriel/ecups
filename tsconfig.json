@@ -17,7 +17,9 @@
       "@guards/*": ["src/guards/*"],
       "@models/*": ["src/models/*"],
       "@decorators/*": ["src/decorators/*"],
-      "@helpers/*": ["src/helpers/*"]
+      "@helpers/*": ["src/helpers/*"],
+      "@schemas/*": ["src/schemas/*"],
+      "@interfaces/*": ["src/interfaces/*"]
     }
   },
   "exclude": ["node_modules", "dist", "uploads"]

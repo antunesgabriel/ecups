@@ -68,7 +68,7 @@ export class RegisterPlayerController {
     return res.status(HttpStatus.CREATED).json(message);
   }
 
-  @Put(':idRegiter')
+  @Put(':idRegister')
   @UseGuards(JwtAuthGuard, UserGuard)
   @Roles('MEMBER')
   @UsePipes(ValidationPipe)

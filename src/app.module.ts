@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { Connection } from 'typeorm';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection as MongoseConnection } from 'mongoose';
 
 // Local
 import { multerStorage } from './configs/multerConfigs';
@@ -16,10 +18,12 @@ import { ChampionshipModule } from './modules/championship/championship.module';
 import { RegisterTeamModule } from './modules/register-team/register-team.module';
 import { RegisterPlayerModule } from './modules/register-player/register-player.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
+import MongooseConfig from './configs/MongooseConfig';
 
 @Module({
   imports: [
     TypeOrmModuleConfig,
+    MongooseConfig,
     MulterModule.register({ storage: multerStorage }),
     PlayerModule,
     OrganizationModule,
@@ -35,5 +39,8 @@ import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private connection: Connection) {}
+  constructor(
+    private connection: Connection,
+    @InjectConnection() private mongooseConnection: MongoseConnection,
+  ) {}
 }

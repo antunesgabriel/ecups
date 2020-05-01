@@ -6,6 +6,8 @@ import { RegisterPlayerRepository } from './register-player.repository';
 import { ChampionshipModule } from '@modules/championship/championship.module';
 import { OrganizationRepository } from '@modules/organization/organization.repository';
 import { PlayerRepository } from '@modules/player/player.repository';
+import { MongooseModule } from '@nestjs/mongoose';
+import { NotificationPlayerSchema } from 'src/schemas/notification-player.schema';
 
 @Module({
   providers: [RegisterPlayerService],
@@ -15,6 +17,9 @@ import { PlayerRepository } from '@modules/player/player.repository';
       RegisterPlayerRepository,
       OrganizationRepository,
       PlayerRepository,
+    ]),
+    MongooseModule.forFeature([
+      { name: 'NotificationPlayer', schema: NotificationPlayerSchema },
     ]),
     ChampionshipModule,
   ],

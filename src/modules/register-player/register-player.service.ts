@@ -4,11 +4,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Model } from 'mongoose';
 import {
   paginate,
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { InjectModel } from '@nestjs/mongoose';
 
 import { RegisterPlayerRepository } from './register-player.repository';
 import { ChampionshipService } from '@modules/championship/championship.service';
@@ -19,7 +21,8 @@ import { IPlayer } from '@utils/player.interface';
 import { PlayerRepository } from '@modules/player/player.repository';
 import { RegisterUpdateDTO } from '@shared/register-update.dto';
 import { IMember } from '@utils/member.interface';
-import { isBefore, parseISO } from 'date-fns';
+import { isBefore, format } from 'date-fns';
+import { INotificationPlayer } from '@interfaces/notification-player.interface';
 
 @Injectable()
 export class RegisterPlayerService {
@@ -31,6 +34,8 @@ export class RegisterPlayerService {
     private readonly _organizationRepository: OrganizationRepository,
     @InjectRepository(PlayerRepository)
     private readonly _playerRepository: PlayerRepository,
+    @InjectModel('NotificationPlayer')
+    private readonly _notificationPlayerModel: Model<INotificationPlayer>,
   ) {}
 
   async paginate(
@@ -133,12 +138,20 @@ export class RegisterPlayerService {
       relations: ['organization', 'championship', 'player'],
     });
 
-    if (register) {
+    if (!register) {
       throw new BadRequestException('Inscrição não encontrada');
     }
 
+    if (register.confirmationDate || register.refusedDate) {
+      const status = register.confirmationDate ? 'Confirmada' : 'Recusada';
+      throw new BadRequestException(
+        `Essa inscrição já foi atualizada anteriormente para o status de: ${status}. ` +
+          'Entre em contato com o suporte do sistema para modificar.',
+      );
+    }
+
     const organization = register.organization;
-    // const player = register.player;
+    const player = register.player;
     const championship = register.championship;
 
     if (championship.forTeams) {
@@ -149,25 +162,23 @@ export class RegisterPlayerService {
 
     if (!member.organization || organization.nickname !== member.organization) {
       throw new UnauthorizedException(
-        'Essa inscrição pertence a um campeonato de sua organização, entre em contato com o suporte da FreeChampions',
+        'Essa inscrição não pertence a um campeonato de sua organização, entre em contato com o suporte da FreeChampions',
       );
     }
 
     const dateNow = new Date();
 
-    register.confirmationDate = updateRegister.confirmedRegister
-      ? dateNow
-      : null;
+    const confirmationDate = updateRegister.confirmedRegister ? dateNow : null;
 
-    register.refusedDate = updateRegister.confirmedRegister ? null : dateNow;
+    const refusedDate = updateRegister.confirmedRegister ? null : dateNow;
 
-    register.refusedReason = updateRegister.confirmedRegister
+    const refusedReason = updateRegister.confirmedRegister
       ? null
       : updateRegister.refusedReason;
 
     const result = await this._registerPlayerRepository.update(
       { registerId },
-      register,
+      { confirmationDate, refusedDate, refusedReason },
     );
 
     if (!result.affected) {
@@ -175,6 +186,29 @@ export class RegisterPlayerService {
         'Ouve um erro ao atualizar a inscrição, entre em contato com o suporte da FreeChampions',
       );
     }
+
+    let content = null;
+
+    if (updateRegister.confirmedRegister) {
+      const date = format(championship.start, 'dd/M/yyyy');
+      const hours = format(championship.start, 'H:m');
+      content =
+        `Parabens!A sua incrição no campeonato ${championship.name} ` +
+        `foi confirmada pela organização do campeonato (${organization.name}). ` +
+        `As partidas do campeonato iniciarão a partir de ${date}ás ${hours} hrs
+      `;
+    } else {
+      content =
+        `A sua incrição no campeonato ${championship.name} foi recusada.` +
+        `A organização ${organization.name} deu o seguinte motivo: ${updateRegister.refusedReason}`;
+    }
+
+    const notification = await this._notificationPlayerModel.create({
+      player: player.playerId,
+      content,
+    });
+
+    await notification.save();
 
     return {
       message: `Inscrição ${
