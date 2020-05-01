@@ -44,7 +44,7 @@ export class TeamEntity {
   @OneToMany(
     () => PlayerEntity,
     player => player.team,
-    { eager: true },
+    { eager: true, onDelete: 'SET NULL' },
   )
   public members: PlayerEntity[];
 

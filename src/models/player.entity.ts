@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { hash, compare, getRounds } from 'bcryptjs';
 import { Exclude } from 'class-transformer';
@@ -87,7 +88,9 @@ export class PlayerEntity {
   @ManyToOne(
     () => TeamEntity,
     team => team.members,
+    { onDelete: 'SET NULL' },
   )
+  @JoinColumn({ name: 'team_id' })
   public team: TeamEntity;
 
   @OneToOne(
