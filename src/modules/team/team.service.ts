@@ -9,6 +9,9 @@ import { PlayerService } from '@modules/player/player.service';
 import { TeamCreateDTO } from './dto/team-create.dto';
 import { TeamUpdateDTO } from './dto/team-update.dto';
 import { IPlayer } from '@utils/player.interface';
+import { TeamEntity } from '@models/team.entity';
+import { PlayerEntity } from '@models/player.entity';
+import { classToPlain } from 'class-transformer';
 
 @Injectable()
 export class TeamService {
@@ -22,7 +25,7 @@ export class TeamService {
     const currentPlayer = await this._playerService.findByEmail(player.email);
 
     if (!currentPlayer) {
-      throw new BadRequestException('Player invalido para criar um novo time');
+      throw new BadRequestException('Player invalido');
     }
 
     if (currentPlayer.leaderOf || currentPlayer.team) {
@@ -34,48 +37,17 @@ export class TeamService {
       );
     }
 
-    const team = this._teamRepository.create(teamCreation);
-    await this._teamRepository.save(team);
-
-    return { message: 'Time criado com sucesso' };
-  }
-
-  async updateShieldTeam(
-    teamId: number,
-    path: string,
-    player: IPlayer,
-  ): Promise<any> {
-    const currentPlayer = await this._playerService.findByEmail(player.email);
-
-    if (!currentPlayer) {
-      throw new BadRequestException('Player invalido para criar um novo time');
+    if (await this._teamRepository.findOne({ name: teamCreation.name })) {
+      throw new BadRequestException('Já exite um time com este nome');
     }
 
-    const team = await this._teamRepository.findOne({ teamId });
+    const team = this._teamRepository.create({
+      ...teamCreation,
+      leader: currentPlayer,
+    });
+    const newTeam = await this._teamRepository.save(team);
 
-    // TODO: Excluir foto upada
-    if (!team) {
-      throw new BadRequestException('O time especificado não existe');
-    }
-
-    if (team.leader.playerId !== currentPlayer.playerId) {
-      throw new UnauthorizedException(
-        'Somente o lider pode alterar o escudo/logo do time',
-      );
-    }
-
-    const result = await this._teamRepository.update(
-      { teamId },
-      { shield: path },
-    );
-
-    if (!result.affected) {
-      throw new BadRequestException(
-        'Não foi possivel atualizar o escudo do time',
-      );
-    }
-
-    return { message: 'Logo/Escudo do time atualizado com sucesso' };
+    return { message: 'Time criado com sucesso', team: classToPlain(newTeam) };
   }
 
   async update(
@@ -86,20 +58,18 @@ export class TeamService {
     const currentPlayer = await this._playerService.findByEmail(player.email);
 
     if (!currentPlayer) {
-      throw new BadRequestException('Player inválido para criar um novo time');
+      throw new BadRequestException('Player inválido');
     }
 
-    const team = await this._teamRepository.findOne({ teamId });
+    const team = await this.findTeamById(teamId);
 
-    // TODO: Excluir foto upada
-    if (!team) {
-      throw new BadRequestException('O time especificado não existe');
-    }
+    await this.validateLeader(team, currentPlayer);
 
-    if (team.leader.playerId !== currentPlayer.playerId) {
-      throw new UnauthorizedException(
-        'Somente o lider pode alterar o as informações do time',
-      );
+    if (
+      teamUpdate.name !== team.name &&
+      (await this._teamRepository.findOne({ name: teamUpdate.name }))
+    ) {
+      throw new BadRequestException('Já exite um time com este nome');
     }
 
     const result = await this._teamRepository.update({ teamId }, teamUpdate);
@@ -117,21 +87,12 @@ export class TeamService {
     const currentPlayer = await this._playerService.findByEmail(player.email);
 
     if (!currentPlayer) {
-      throw new BadRequestException('Player inválido para criar um novo time');
+      throw new BadRequestException('Player inválido');
     }
 
-    const team = await this._teamRepository.findOne({ teamId });
+    const team = await this.findTeamById(teamId);
 
-    // TODO: Excluir foto upada
-    if (!team) {
-      throw new BadRequestException('O time especificado não existe');
-    }
-
-    if (team.leader.playerId !== currentPlayer.playerId) {
-      throw new UnauthorizedException(
-        'Somente o lider pode alterar o as informações do time',
-      );
-    }
+    await this.validateLeader(team, currentPlayer);
 
     const result = await this._teamRepository.delete({ teamId });
 
@@ -142,5 +103,61 @@ export class TeamService {
     }
 
     return { message: 'Time excluido com sucesso' };
+  }
+
+  async updateShieldTeam(
+    teamId: number,
+    path: string,
+    player: IPlayer,
+  ): Promise<any> {
+    const currentPlayer = await this._playerService.findByEmail(player.email);
+
+    if (!currentPlayer) {
+      throw new BadRequestException('Player invalido');
+    }
+
+    const team = await this.findTeamById(teamId);
+
+    await this.validateLeader(team, currentPlayer);
+
+    const result = await this._teamRepository.update(
+      { teamId },
+      { shield: path },
+    );
+
+    if (!result.affected) {
+      throw new BadRequestException(
+        'Não foi possivel atualizar o escudo do time',
+      );
+    }
+
+    return { message: 'Logo/Escudo do time atualizado com sucesso' };
+  }
+
+  async findTeamById(teamId: number): Promise<TeamEntity | null> {
+    const team = await this._teamRepository.findOne({
+      where: { teamId },
+      relations: ['leader', 'members'],
+    });
+
+    // TODO: Excluir foto upada
+    if (!team) {
+      throw new BadRequestException('O time especificado não existe');
+    }
+
+    return team;
+  }
+
+  async validateLeader(
+    team: TeamEntity,
+    player: PlayerEntity,
+  ): Promise<boolean> {
+    if (team.leader.playerId !== player.playerId) {
+      throw new UnauthorizedException(
+        'Somente o lider pode alterar o as informações do time',
+      );
+    }
+
+    return true;
   }
 }
