@@ -6,15 +6,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
-  ManyToMany,
-  JoinTable,
   OneToMany,
 } from 'typeorm';
 import { OrganizationEntity } from './organization.entity';
-import { PlayerEntity } from './player.entity';
-import { TeamEntity } from './team.entity';
-import { RegisterTeam } from './registerTeam.entity';
-import { RegisterPlayer } from './registerPlayer.entity';
+import { RegisterTeamEntity } from './registerTeam.entity';
+import { RegisterPlayerEntity } from './registerPlayer.entity';
 
 @Entity({ name: 'championships' })
 export class ChampionshipEntity {
@@ -72,14 +68,14 @@ export class ChampionshipEntity {
   public organization: OrganizationEntity;
 
   @OneToMany(
-    () => RegisterTeam,
+    () => RegisterTeamEntity,
     registerTeam => registerTeam.championship,
   )
-  public registeredTeams: RegisterTeam[];
+  public registeredTeams: RegisterTeamEntity[];
 
   @OneToMany(
-    () => RegisterPlayer,
+    () => RegisterPlayerEntity,
     registerPlayer => registerPlayer.championship,
   )
-  public registeredPlayers: RegisterPlayer[];
+  public registeredPlayers: RegisterPlayerEntity[];
 }

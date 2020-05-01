@@ -54,6 +54,7 @@ export class AuthService {
       nickName: payload.nickName,
       team: payload.team ? payload.team.name : null,
       isPlayer: true,
+      playerId: payload.playerId,
     });
 
     return { _token, player: payload };
@@ -67,6 +68,7 @@ export class AuthService {
       organization: payload.organization ? payload.organization.nickname : null,
       // role: payload.role.role,
       isMember: true,
+      memberId: payload.memberId,
     });
 
     return { _token, member: payload };

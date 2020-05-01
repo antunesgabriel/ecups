@@ -9,7 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { PlayerEntity } from './player.entity';
-import { RegisterTeam } from './registerTeam.entity';
+import { RegisterTeamEntity } from './registerTeam.entity';
 
 @Entity({ name: 'teams' })
 export class TeamEntity {
@@ -49,8 +49,8 @@ export class TeamEntity {
   public members: PlayerEntity[];
 
   @OneToMany(
-    () => RegisterTeam,
+    () => RegisterTeamEntity,
     register => register.team,
   )
-  public registrations: RegisterTeam[];
+  public registrations: RegisterTeamEntity[];
 }

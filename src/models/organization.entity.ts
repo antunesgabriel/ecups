@@ -9,6 +9,8 @@ import {
 import { MemberEntity } from './member.entity';
 import { ChampionshipEntity } from './championship.entity';
 import { Exclude } from 'class-transformer';
+import { RegisterPlayerEntity } from './registerPlayer.entity';
+import { RegisterTeamEntity } from './registerTeam.entity';
 
 @Entity({ name: 'organizations' })
 export class OrganizationEntity {
@@ -51,4 +53,16 @@ export class OrganizationEntity {
     championship => championship.organization,
   )
   public championships: string;
+
+  @OneToMany(
+    () => RegisterPlayerEntity,
+    register => register.organization,
+  )
+  public registeredPlayers: RegisterPlayerEntity[];
+
+  @OneToMany(
+    () => RegisterTeamEntity,
+    register => register.organization,
+  )
+  public registeredTeams: RegisterTeamEntity[];
 }

@@ -13,7 +13,8 @@ import { ImageModule } from './modules/image/image.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MemberModule } from './modules/member/member.module';
 import { ChampionshipModule } from './modules/championship/championship.module';
-import { RegisterModule } from './modules/register/register.module';
+import { RegisterTeamModule } from './modules/register-team/register-team.module';
+import { RegisterPlayerModule } from './modules/register-player/register-player.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 
 @Module({
@@ -27,7 +28,8 @@ import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
     AuthModule,
     MemberModule,
     ChampionshipModule,
-    RegisterModule,
+    RegisterTeamModule,
+    RegisterPlayerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

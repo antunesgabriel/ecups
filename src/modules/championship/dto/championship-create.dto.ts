@@ -35,6 +35,6 @@ export class ChampionshipCreateDTO {
   @IsNotEmpty({
     message: 'Informe se o campeonato é para time ou jogadores individuais',
   })
-  @IsBoolean({ message: 'Valo de campo para time deve ser do tipo boolean' })
+  @IsBoolean({ message: 'Valor de campo para time deve ser do tipo boolean' })
   forTeams: boolean;
 }

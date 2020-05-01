@@ -12,5 +12,6 @@ import { OrganizationModule } from '@modules/organization/organization.module';
     TypeOrmModule.forFeature([ChampionshipRepository]),
     OrganizationModule,
   ],
+  exports: [ChampionshipService],
 })
 export class ChampionshipModule {}

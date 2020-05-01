@@ -4,6 +4,8 @@ import { TeamEntity } from '@models/team.entity';
 import { OrganizationEntity } from '@models/organization.entity';
 import { MemberEntity } from '@models/member.entity';
 import { ChampionshipEntity } from '@models/championship.entity';
+import { RegisterTeamEntity } from '@models/registerTeam.entity';
+import { RegisterPlayerEntity } from '@models/registerPlayer.entity';
 
 export default TypeOrmModule.forRoot({
   type: 'postgres',
@@ -18,6 +20,8 @@ export default TypeOrmModule.forRoot({
     OrganizationEntity,
     MemberEntity,
     ChampionshipEntity,
+    RegisterTeamEntity,
+    RegisterPlayerEntity,
   ],
   synchronize: true,
 });

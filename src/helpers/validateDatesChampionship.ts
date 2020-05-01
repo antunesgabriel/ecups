@@ -9,7 +9,7 @@ interface ChampionshipDates {
 
 export default (championship): ChampionshipDates => {
   const registrationsStart = parseISO(championship.registrationsStart);
-  const registrationsEnd = championship.registrationsEnd
+  const registrationsEnd = parseISO(championship.registrationsEnd)
     ? parseISO(championship.registrationsEnd)
     : null;
   const start = championship.start ? parseISO(championship.start) : null;

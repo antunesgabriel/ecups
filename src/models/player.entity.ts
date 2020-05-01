@@ -14,7 +14,7 @@ import { hash, compare, getRounds } from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import { TeamEntity } from './team.entity';
 
-import { RegisterPlayer } from './registerPlayer.entity';
+import { RegisterPlayerEntity } from './registerPlayer.entity';
 
 @Entity({ name: 'players' })
 export class PlayerEntity {
@@ -97,8 +97,8 @@ export class PlayerEntity {
   public leaderOf: TeamEntity;
 
   @OneToMany(
-    () => RegisterPlayer,
+    () => RegisterPlayerEntity,
     register => register.player,
   )
-  public registrations: RegisterPlayer[];
+  public registrations: RegisterPlayerEntity[];
 }

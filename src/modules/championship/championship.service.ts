@@ -5,7 +5,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
-import { isBefore, add, parseISO } from 'date-fns';
+import { add } from 'date-fns';
 
 import { ChampionshipRepository } from './championship.repository';
 import { IMember } from '@utils/member.interface';
@@ -141,5 +141,12 @@ export class ChampionshipService {
       .orderBy('champ.createdAt', 'DESC');
 
     return paginate<ChampionshipEntity>(query, options);
+  }
+
+  async findById(id: number): Promise<ChampionshipEntity | null> {
+    return await this._championshipRepository.findOne({
+      where: { championshipId: id },
+      relations: ['organization'],
+    });
   }
 }

@@ -4,12 +4,16 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { TeamEntity } from './team.entity';
 import { ChampionshipEntity } from './championship.entity';
+import { Exclude } from 'class-transformer';
+import { OrganizationEntity } from './organization.entity';
 
 @Entity({ name: 'register_teams' })
-export class RegisterTeam {
+export class RegisterTeamEntity {
   @PrimaryGeneratedColumn({ name: 'register_id' })
   public registerId: number;
 
@@ -42,4 +46,19 @@ export class RegisterTeam {
   )
   @JoinColumn({ name: 'championship_id' })
   public championship: ChampionshipEntity;
+
+  @ManyToOne(
+    () => OrganizationEntity,
+    organization => organization.registeredTeams,
+  )
+  @JoinColumn({ name: 'organization_id' })
+  public organization: OrganizationEntity;
+
+  @CreateDateColumn({ name: 'created_at' })
+  @Exclude()
+  public createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  @Exclude()
+  public updatedAt: Date;
 }
