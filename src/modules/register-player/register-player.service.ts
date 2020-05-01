@@ -42,6 +42,8 @@ export class RegisterPlayerService {
 
     if (user.isPlayer) {
       query
+        .innerJoinAndSelect('register.organization', 'organization')
+        .innerJoinAndSelect('register.championship', 'championship')
         .where('register.player = :playerId', {
           playerId: user.playerId,
         })
@@ -57,7 +59,9 @@ export class RegisterPlayerService {
       });
 
       query
-        .innerJoin('register.organization', 'organization')
+        .innerJoinAndSelect('register.organization', 'organization')
+        .innerJoinAndSelect('register.championship', 'championship')
+        .innerJoinAndSelect('register.player', 'player')
         .where('organization.organizationId = :organizationId' + aditional, {
           organizationId: organization.organizationId,
         })
