@@ -7,7 +7,7 @@ export const TeamInvitationPlayerSchema = new mongoose.Schema(
       required: true,
     },
     player: {
-      type: Number,
+      type: String,
       required: true,
     },
     message: {
@@ -17,6 +17,11 @@ export const TeamInvitationPlayerSchema = new mongoose.Schema(
     accept: {
       type: Boolean,
       require: true,
+      default: null,
+    },
+    read: {
+      type: Boolean,
+      required: true,
       default: false,
     },
   },

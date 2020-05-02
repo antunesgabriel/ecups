@@ -5,6 +5,8 @@ import { classToPlain } from 'class-transformer';
 import { PlayerRepository } from './player.repository';
 import { PlayerCreateDTO } from './dto/player-create.dto';
 import { PlayerEntity } from '@models/player.entity';
+import { TeamEntity } from '@models/team.entity';
+import { te } from 'date-fns/locale';
 
 @Injectable()
 export class PlayerService {
@@ -54,5 +56,10 @@ export class PlayerService {
         'email',
       ],
     });
+  }
+
+  async updateTeam(playerId: number, team: TeamEntity): Promise<boolean> {
+    await this._playerRepository.update({ playerId }, { team });
+    return true;
   }
 }

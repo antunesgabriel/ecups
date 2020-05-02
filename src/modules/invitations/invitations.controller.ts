@@ -5,6 +5,11 @@ import {
   HttpStatus,
   Res,
   Query,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+  Put,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -14,6 +19,8 @@ import { UserGuard } from '@guards/user.guard';
 import { Roles } from '@decorators/roles.decorator';
 import { User } from '@decorators/user.decorator';
 import { IPlayer } from '@utils/player.interface';
+import { InvitationPlayerCreateDTO } from './dto/invitation-create.dto';
+import { InvitationPlayerUpdateDTO } from './dto/invitation-update.dto';
 
 @Controller('invitations')
 export class InvitationsController {
@@ -42,5 +49,31 @@ export class InvitationsController {
       player,
     );
     return res.status(HttpStatus.OK).json(list);
+  }
+
+  @Post()
+  @UseGuards(JwtAuthGuard, UserGuard)
+  @Roles('PLAYER')
+  @UsePipes(ValidationPipe)
+  async store(
+    @Body() invitation: InvitationPlayerCreateDTO,
+    @User() player: IPlayer,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const message = await this._invitationsService.store(invitation, player);
+    return res.status(HttpStatus.CREATED).json(message);
+  }
+
+  @Put()
+  @UseGuards(JwtAuthGuard, UserGuard)
+  @Roles('PLAYER')
+  @UsePipes(ValidationPipe)
+  async update(
+    @Body() answer: InvitationPlayerUpdateDTO,
+    @User() player: IPlayer,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const message = await this._invitationsService.update(answer, player);
+    return res.status(HttpStatus.CREATED).json(message);
   }
 }

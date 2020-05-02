@@ -7,7 +7,7 @@ import { ChampionshipModule } from '@modules/championship/championship.module';
 import { OrganizationRepository } from '@modules/organization/organization.repository';
 import { PlayerRepository } from '@modules/player/player.repository';
 import { MongooseModule } from '@nestjs/mongoose';
-import { NotificationPlayerSchema } from 'src/schemas/notification-player.schema';
+import { NotificationPlayerSchema } from '@schemas/notification-player.schema';
 
 @Module({
   providers: [RegisterPlayerService],
