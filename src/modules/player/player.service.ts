@@ -37,6 +37,22 @@ export class PlayerService {
     return this._playerRepository.findOne({
       where: { email },
       relations: ['team', 'leaderOf'],
+      select: [
+        'team',
+        'active',
+        'avatar',
+        'birthDate',
+        'cpf',
+        'firstName',
+        'lastName',
+        'password',
+        'playerId',
+        'rgEmitter',
+        'rgNumber',
+        'rgUf',
+        'nickName',
+        'email',
+      ],
     });
   }
 }

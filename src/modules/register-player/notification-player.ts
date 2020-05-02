@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export class INotificationPlayer extends Document {
+export class NotificationPlayer extends Document {
   content: string;
   read?: boolean;
   player: number;

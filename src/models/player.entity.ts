@@ -31,7 +31,7 @@ export class PlayerEntity {
   @Column({ unique: true, nullable: false, type: 'varchar' })
   public email: string;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false, type: 'varchar', select: false })
   @Exclude()
   public password: string;
 

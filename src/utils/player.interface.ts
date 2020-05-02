@@ -3,4 +3,5 @@ export interface IPlayer {
   nickName: string;
   team?: string;
   isPlayer: boolean;
+  playerId?: number;
 }

@@ -17,6 +17,7 @@ import { MemberModule } from './modules/member/member.module';
 import { ChampionshipModule } from './modules/championship/championship.module';
 import { RegisterTeamModule } from './modules/register-team/register-team.module';
 import { RegisterPlayerModule } from './modules/register-player/register-player.module';
+import { InvitationsModule } from './modules/invitations/invitations.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 import MongooseConfig from './configs/MongooseConfig';
 
@@ -34,6 +35,7 @@ import MongooseConfig from './configs/MongooseConfig';
     ChampionshipModule,
     RegisterTeamModule,
     RegisterPlayerModule,
+    InvitationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

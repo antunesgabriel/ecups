@@ -4,4 +4,5 @@ export interface IMember {
   lastName: string;
   organization?: string;
   isMember: boolean;
+  memberId?: number;
 }

@@ -22,7 +22,7 @@ import { PlayerRepository } from '@modules/player/player.repository';
 import { RegisterUpdateDTO } from '@shared/register-update.dto';
 import { IMember } from '@utils/member.interface';
 import { isBefore, format } from 'date-fns';
-import { INotificationPlayer } from '@interfaces/notification-player.interface';
+import { NotificationPlayer } from '@modules/register-player/notification-player';
 
 @Injectable()
 export class RegisterPlayerService {
@@ -35,7 +35,7 @@ export class RegisterPlayerService {
     @InjectRepository(PlayerRepository)
     private readonly _playerRepository: PlayerRepository,
     @InjectModel('NotificationPlayer')
-    private readonly _notificationPlayerModel: Model<INotificationPlayer>,
+    private readonly _notificationPlayerModel: Model<NotificationPlayer>,
   ) {}
 
   async paginate(
