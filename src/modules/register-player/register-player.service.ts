@@ -22,7 +22,7 @@ import { PlayerRepository } from '@modules/player/player.repository';
 import { RegisterUpdateDTO } from '@shared/register-update.dto';
 import { IMember } from '@utils/member.interface';
 import { isBefore, format } from 'date-fns';
-import { NotificationPlayer } from '@modules/register-player/notification-player';
+import { NotificationPlayer } from '@shared/notification-player.model';
 
 @Injectable()
 export class RegisterPlayerService {

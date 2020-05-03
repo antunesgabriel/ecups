@@ -12,7 +12,7 @@ import { IPlayer } from '@utils/player.interface';
 import { InvitationPlayerCreateDTO } from './dto/invitation-create.dto';
 import { InvitationPlayerUpdateDTO } from './dto/invitation-update.dto';
 import { PlayerService } from '@modules/player/player.service';
-import { NotificationPlayer } from '@modules/register-player/notification-player';
+import { NotificationPlayer } from '@shared/notification-player.model';
 
 @Injectable()
 export class InvitationsService {
