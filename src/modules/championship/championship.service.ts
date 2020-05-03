@@ -146,7 +146,7 @@ export class ChampionshipService {
   async findById(id: number): Promise<ChampionshipEntity | null> {
     return await this._championshipRepository.findOne({
       where: { championshipId: id },
-      relations: ['organization'],
+      relations: ['organization', 'organization.members'],
     });
   }
 }

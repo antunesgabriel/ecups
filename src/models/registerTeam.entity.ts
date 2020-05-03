@@ -27,6 +27,14 @@ export class RegisterTeamEntity {
 
   @Column({
     nullable: true,
+    type: 'text',
+    default: null,
+    name: 'refused_reason',
+  })
+  public refusedReason: string;
+
+  @Column({
+    nullable: true,
     type: 'timestamp',
     name: 'refused_date',
     default: null,
