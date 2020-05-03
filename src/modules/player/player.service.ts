@@ -62,4 +62,8 @@ export class PlayerService {
     await this._playerRepository.update({ playerId }, { team });
     return true;
   }
+
+  async findByNickName(nickName: string): Promise<PlayerEntity | null> {
+    return await this._playerRepository.findOne({ nickName });
+  }
 }

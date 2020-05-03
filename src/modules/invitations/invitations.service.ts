@@ -95,6 +95,12 @@ export class InvitationsService {
       );
     }
 
+    if (!(await this._playerService.findByNickName(invitation.nickName))) {
+      throw new BadRequestException(
+        ` Não existe jogador com o nick: ${invitation.nickName}`,
+      );
+    }
+
     const newInvitation = await this._invitationPlayerModel.create({
       player: invitation.nickName,
       team: team.teamId,
