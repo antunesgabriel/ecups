@@ -52,7 +52,7 @@ export class AuthService {
     const _token = this._jwtService.sign({
       email: payload.email,
       nickName: payload.nickName,
-      team: payload.team ? payload.team.name : null,
+      team: payload.team ? payload.team.teamId : null,
       isPlayer: true,
       playerId: payload.playerId,
     });

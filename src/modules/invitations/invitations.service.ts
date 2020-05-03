@@ -110,12 +110,14 @@ export class InvitationsService {
     awnser: InvitationPlayerUpdateDTO,
     player: IPlayer,
   ): Promise<any> {
-    const invitation = await this._invitationPlayerModel.find({
-      _id: awnser._id,
-      player: player.nickName,
-      team: awnser.teamId,
-      accept: null,
-    });
+    const invitation = await this._invitationPlayerModel
+      .find({
+        _id: awnser._id,
+        player: player.nickName,
+        team: awnser.teamId,
+        accept: null,
+      })
+      .exec();
 
     if (!invitation) {
       throw new BadRequestException(
@@ -136,30 +138,58 @@ export class InvitationsService {
     }
 
     if (!awnser.accept) {
-      await this._invitationPlayerModel.findByIdAndUpdate(awnser._id, {
-        accept: false,
-        read: true,
-      });
+      await this._invitationPlayerModel
+        .findByIdAndUpdate(awnser._id, {
+          accept: false,
+          read: true,
+        })
+        .exec();
 
       return { message: 'Convite recusado com sucesso!' };
     }
 
     await this._playerService.updateTeam(currentPlayer.playerId, team);
 
-    await this._invitationPlayerModel.findByIdAndUpdate(awnser._id, {
-      accept: true,
-      read: true,
-    });
+    await this._invitationPlayerModel
+      .findByIdAndUpdate(awnser._id, {
+        accept: true,
+        read: true,
+      })
+      .exec();
 
-    await this._notificationPlayerModel.create({
+    const notfication = await this._notificationPlayerModel.create({
       player: team.leader.playerId,
       content:
         `Mais um membro no time! O jogador ${currentPlayer.nickName}` +
         ' aceitou o convite para entrar o seu time',
     });
 
+    await notfication.save();
+
     return {
       message: `Convite aceito com sucesso! Agora você faz parte do time ${team.name}`,
     };
+  }
+
+  async destroy(invitationId: string, player: IPlayer): Promise<any> {
+    const invitation = await this._invitationPlayerModel
+      .findById(invitationId)
+      .exec();
+
+    if (!invitation) {
+      throw new BadRequestException('Este convite não existe');
+    }
+
+    const leader = await this._playerService.findByEmail(player.email);
+
+    if (!leader.leaderOf || leader.leaderOf.teamId !== invitation.team) {
+      throw new UnauthorizedException(
+        'Somente o lider do time pode excluir um convite',
+      );
+    }
+
+    await this._invitationPlayerModel.findByIdAndDelete(invitationId).exec();
+
+    return { message: 'Convite excluido' };
   }
 }

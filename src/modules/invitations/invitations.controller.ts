@@ -10,6 +10,8 @@ import {
   UsePipes,
   ValidationPipe,
   Put,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -74,6 +76,21 @@ export class InvitationsController {
     @Res() res: Response,
   ): Promise<Response> {
     const message = await this._invitationsService.update(answer, player);
-    return res.status(HttpStatus.CREATED).json(message);
+    return res.status(HttpStatus.OK).json(message);
+  }
+
+  @Delete(':invitationId')
+  @UseGuards(JwtAuthGuard, UserGuard)
+  @Roles('PLAYER')
+  async destroy(
+    @User() player: IPlayer,
+    @Res() res: Response,
+    @Param('invitationId') invitationId: string,
+  ): Promise<Response> {
+    const message = await this._invitationsService.destroy(
+      invitationId,
+      player,
+    );
+    return res.status(HttpStatus.OK).json(message);
   }
 }
