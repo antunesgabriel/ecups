@@ -22,11 +22,11 @@ import { ChampionshipService } from '@modules/championship/championship.service'
 import { RegisterTeamCreateDTO } from './dto/register-team-create.dto';
 import { IPlayer } from '@utils/player.interface';
 import { TeamRepository } from '@modules/team/team.repository';
-import { BaseExceptionFilter } from '@nestjs/core';
 import { TeamEntity } from '@models/team.entity';
 import { ChampionshipEntity } from '@models/championship.entity';
 import { RegisterUpdateDTO } from '@shared/register-update.dto';
 import { IMember } from '@utils/member.interface';
+import { RegisterTeamEntity } from '@models/registerTeam.entity';
 
 @Injectable()
 export class RegisterTeamService {
@@ -43,6 +43,50 @@ export class RegisterTeamService {
     private readonly _notificationMemberModel: Model<NotificationMember>,
     private readonly _championshipService: ChampionshipService,
   ) {}
+
+  async paginate(
+    options: IPaginationOptions,
+    user,
+    championshipId: number,
+  ): Promise<Pagination<RegisterTeamEntity>> {
+    const query = this._registerTeamRepository.createQueryBuilder('register');
+
+    if (user.isPlayer) {
+      query
+        .innerJoinAndSelect('register.organization', 'organization')
+        .innerJoinAndSelect('register.championship', 'championship')
+        .where('register.team = :teamId', {
+          teamId: user.team,
+        })
+        .orderBy('register.createdAt', 'DESC');
+    }
+
+    if (user.isMember) {
+      if (!user.organization) {
+        throw new BadRequestException(
+          'É preciso fazer parte de uma organização para ver os pedidos de inscrições',
+        );
+      }
+
+      const aditional = !!championshipId
+        ? ` AND register.championship = ${championshipId}`
+        : '';
+      const organization = await this._organizationRepository.findOne({
+        nickname: user.organization,
+      });
+
+      query
+        .innerJoinAndSelect('register.organization', 'organization')
+        .innerJoinAndSelect('register.championship', 'championship')
+        .innerJoinAndSelect('register.team', 'team')
+        .where('organization.organizationId = :organizationId' + aditional, {
+          organizationId: organization.organizationId,
+        })
+        .orderBy('register.createdAt', 'DESC');
+    }
+
+    return paginate<RegisterTeamEntity>(query, options);
+  }
 
   async store(
     register: RegisterTeamCreateDTO,
@@ -133,7 +177,7 @@ export class RegisterTeamService {
 
     if (!member.organization || organization.nickname !== member.organization) {
       throw new UnauthorizedException(
-        'Essa inscrição não pertence a um campeonato de sua organização, entre em contato com o suporte da FreeChampions',
+        'Essa inscrição não pertence a um campeonato de sua organização, entre em contato com o suporte da eCups',
       );
     }
 
@@ -162,7 +206,7 @@ export class RegisterTeamService {
 
     if (!result.affected) {
       throw new BadRequestException(
-        'Ouve um erro ao atualizar a inscrição, entre em contato com o suporte da FreeChampions',
+        'Ouve um erro ao atualizar a inscrição, entre em contato com o suporte da eCups',
       );
     }
 

@@ -156,13 +156,13 @@ export class RegisterPlayerService {
 
     if (championship.forTeams) {
       throw new BadRequestException(
-        'Ops ocorreu um erro ao atualizar a inscrição, entre em contato com o suporte da FreeChampions',
+        'Ops ocorreu um erro ao atualizar a inscrição, entre em contato com o suporte da eCups',
       );
     }
 
     if (!member.organization || organization.nickname !== member.organization) {
       throw new UnauthorizedException(
-        'Essa inscrição não pertence a um campeonato de sua organização, entre em contato com o suporte da FreeChampions',
+        'Essa inscrição não pertence a um campeonato de sua organização, entre em contato com o suporte da eCups',
       );
     }
 
@@ -183,7 +183,7 @@ export class RegisterPlayerService {
 
     if (!result.affected) {
       throw new BadRequestException(
-        'Ouve um erro ao atualizar a inscrição, entre em contato com o suporte da FreeChampions',
+        'Ouve um erro ao atualizar a inscrição, entre em contato com o suporte da eCups',
       );
     }
 
