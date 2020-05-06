@@ -3,18 +3,17 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
-import { PlayerModule } from '@modules/player/player.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { MemberModule } from '@modules/member/member.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from '@models/user.entity';
 
 const secret = process.env.APP_JWT_SECRET;
 const expiresIn = process.env.APP_JWT_EXPIRE;
 
 @Module({
   imports: [
-    PlayerModule,
-    MemberModule,
+    TypeOrmModule.forFeature([UserEntity]),
     PassportModule,
     JwtModule.register({ secret, signOptions: { expiresIn } }),
   ],

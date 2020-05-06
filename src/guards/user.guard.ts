@@ -20,9 +20,11 @@ export class UserGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    const userRole = user.isPlayer ? 'PLAYER' : 'MEMBER';
+    if (user.role === 'ADMIN') return true;
 
-    if (roles.some(role => role === userRole)) {
+    if (!user.role) return false;
+
+    if (roles.some(role => role === user.role)) {
       return true;
     }
 

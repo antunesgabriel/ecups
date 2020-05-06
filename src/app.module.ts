@@ -8,16 +8,6 @@ import { Connection as MongoseConnection } from 'mongoose';
 
 // Local
 import { multerStorage } from './configs/multerConfigs';
-import { PlayerModule } from './modules/player/player.module';
-import { OrganizationModule } from './modules/organization/organization.module';
-import { TeamModule } from './modules/team/team.module';
-import { ImageModule } from './modules/image/image.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { MemberModule } from './modules/member/member.module';
-import { ChampionshipModule } from './modules/championship/championship.module';
-import { RegisterTeamModule } from './modules/register-team/register-team.module';
-import { RegisterPlayerModule } from './modules/register-player/register-player.module';
-import { InvitationsModule } from './modules/invitations/invitations.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 import MongooseConfig from './configs/MongooseConfig';
 
@@ -26,16 +16,6 @@ import MongooseConfig from './configs/MongooseConfig';
     TypeOrmModuleConfig,
     MongooseConfig,
     MulterModule.register({ storage: multerStorage }),
-    PlayerModule,
-    OrganizationModule,
-    TeamModule,
-    ImageModule,
-    AuthModule,
-    MemberModule,
-    ChampionshipModule,
-    RegisterTeamModule,
-    RegisterPlayerModule,
-    InvitationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

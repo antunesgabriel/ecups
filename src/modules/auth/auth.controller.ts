@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Request, Query } from '@nestjs/common';
+import { Controller, UseGuards, Post, Request } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -8,13 +8,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post()
-  async player(@Request() req, @Query('to') to: string): Promise<any> {
-    if (to === 'player') {
-      return this._authService.loginPlayer(req.user);
-    }
-
-    if (to === 'member') {
-      return this._authService.loginMember(req.user);
-    }
+  async player(@Request() req): Promise<any> {
+    return await this._authService.loginUser(req.user);
   }
 }

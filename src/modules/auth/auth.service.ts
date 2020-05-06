@@ -3,74 +3,56 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
-
-import { PlayerService } from '@modules/player/player.service';
 import { JwtService } from '@nestjs/jwt';
-import { PlayerEntity } from '@models/player.entity';
-import { MemberEntity } from '@models/member.entity';
-import { MemberService } from '@modules/member/member.service';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { UserEntity } from '@models/user.entity';
+import { classToPlain } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly _playerService: PlayerService,
+    @InjectRepository(UserEntity)
+    private readonly _userRespository: Repository<UserEntity>,
     private readonly _jwtService: JwtService,
-    private readonly _memberService: MemberService,
   ) {}
 
-  async validatePlayer(email: string, password: string): Promise<PlayerEntity> {
-    const player = await this._playerService.findByEmail(email);
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this._userRespository.findOne({
+      where: { email: email },
+      select: [
+        'email',
+        'password',
+        'name',
+        'surname',
+        'avatar',
+        'userId',
+        'nickname',
+      ],
+    });
 
-    if (!player) {
+    if (!user) {
       throw new BadRequestException(
         'Email informado não possui cadastro na plataforma',
       );
     }
 
-    if (!(await player.checkPassword(password))) {
+    if (!(await user.checkPassword(password))) {
       throw new UnauthorizedException('Senha incorreta');
     }
 
-    return player;
+    return classToPlain(user);
   }
 
-  async validateMember(email: string, password: string): Promise<MemberEntity> {
-    const member = await this._memberService.findByEmail(email);
-
-    if (!member) {
-      throw new UnauthorizedException('Você não possui cadastro na plataforma');
-    }
-
-    if (!(await member.checkPassword(password))) {
-      throw new BadRequestException('Senha incorreta');
-    }
-
-    return member;
-  }
-
-  async loginPlayer(payload): Promise<any> {
+  async loginUser(payload): Promise<any> {
     const _token = this._jwtService.sign({
       email: payload.email,
-      nickName: payload.nickName,
-      team: payload.team ? payload.team.teamId : null,
-      isPlayer: true,
-      playerId: payload.playerId,
+      nickname: payload.nickname,
+      userId: payload.userId,
+      role: payload.role.role,
     });
 
     return { _token, player: payload };
-  }
-
-  async loginMember(payload): Promise<any> {
-    const _token = this._jwtService.sign({
-      email: payload.email,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      organization: payload.organization ? payload.organization.nickname : null,
-      // role: payload.role.role,
-      isMember: true,
-      memberId: payload.memberId,
-    });
-
-    return { _token, member: payload };
   }
 }

@@ -1,11 +1,10 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PlayerEntity } from '@models/player.entity';
-import { TeamEntity } from '@models/team.entity';
-import { OrganizationEntity } from '@models/organization.entity';
-import { MemberEntity } from '@models/member.entity';
-import { ChampionshipEntity } from '@models/championship.entity';
-import { RegisterTeamEntity } from '@models/registerTeam.entity';
-import { RegisterPlayerEntity } from '@models/registerPlayer.entity';
+import { UserEntity } from '@models/user.entity';
+import { RoleEntity } from '@models/role.entity';
+import { LeagueEntity } from '@models/league.entity';
+import { LeagueTypeEntity } from '@models/leagueType.entity';
+import { GameEntity } from '@models/game.entity';
+import { AddressEntity } from '@models/address.entity';
 
 export default TypeOrmModule.forRoot({
   type: 'postgres',
@@ -15,13 +14,12 @@ export default TypeOrmModule.forRoot({
   password: String(process.env.APP_DB_PASS),
   database: String(process.env.APP_DB_NAME),
   entities: [
-    PlayerEntity,
-    TeamEntity,
-    OrganizationEntity,
-    MemberEntity,
-    ChampionshipEntity,
-    RegisterTeamEntity,
-    RegisterPlayerEntity,
+    UserEntity,
+    RoleEntity,
+    LeagueEntity,
+    LeagueTypeEntity,
+    GameEntity,
+    AddressEntity,
   ],
   synchronize: true,
 });
