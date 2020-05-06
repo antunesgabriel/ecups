@@ -22,9 +22,9 @@ import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
 import { UserGuard } from '@guards/user.guard';
 import { Roles } from '@decorators/roles.decorator';
 import { GameCreateDTO } from './dto/game-create.dto';
+import { GameUpdateDTO } from './dto/game-update.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerStorage, imageFileFilter } from 'src/configs/multerConfigs';
-import { GameUpdateDTO } from './dto/game-update.dto';
 
 const URL = process.env.APP_URL;
 

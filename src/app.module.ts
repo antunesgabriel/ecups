@@ -15,6 +15,7 @@ import MongooseConfig from './configs/MongooseConfig';
 import { AdminModule } from '@modules/admin/admin/admin.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { GameModule } from './modules/admin/game/game.module';
+import { RoleModule } from './modules/admin/role/role.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { GameModule } from './modules/admin/game/game.module';
     AdminModule,
     AuthModule,
     GameModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
