@@ -7,6 +7,8 @@ import {
   ManyToOne,
   BeforeInsert,
   BeforeUpdate,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { hash, compare, getRounds } from 'bcryptjs';
@@ -37,6 +39,14 @@ export class UserEntity {
 
   @Column({ nullable: true, default: null, type: 'text' })
   avatar: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  @Exclude()
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', insert: false, nullable: true })
+  @Exclude()
+  updatedAt: Date;
 
   // Relacionamentos
   @OneToOne(

@@ -6,8 +6,11 @@ export class GameEntity {
   @PrimaryGeneratedColumn({ name: 'game_id' })
   gameId: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'varchar' })
   game: string;
+
+  @Column({ nullable: false, type: 'varchar' })
+  logo: string;
 
   // Relacionamentos
 

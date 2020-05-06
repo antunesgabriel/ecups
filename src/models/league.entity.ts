@@ -2,9 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToOne,
   JoinColumn,
   ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { GameEntity } from './game.entity';
 import { LeagueTypeEntity } from './leagueType.entity';
@@ -35,6 +36,12 @@ export class LeagueEntity {
   // team ou player
   @Column({ nullable: false })
   competitor: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', insert: false, nullable: true })
+  updatedAt: Date;
 
   //Relacionamento
   @ManyToOne(
