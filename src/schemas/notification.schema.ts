@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 
-export const NotificationMemberSchema = new mongoose.Schema(
+export const NotificationSchema = new mongoose.Schema(
   {
-    content: {
+    message: {
       type: String,
       required: true,
     },
@@ -11,9 +11,12 @@ export const NotificationMemberSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    member: {
+    user: {
       type: Number,
       required: true,
+    },
+    link: {
+      type: String,
     },
   },
   { timestamps: true },

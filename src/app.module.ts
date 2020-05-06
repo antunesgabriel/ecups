@@ -8,6 +8,7 @@ import { Connection as MongoseConnection } from 'mongoose';
 
 // Local
 import { multerStorage } from './configs/multerConfigs';
+import { AdminModule } from './modules/admin/admin/admin.module';
 import TypeOrmModuleConfig from './configs/TypeOrmModuleConfig';
 import MongooseConfig from './configs/MongooseConfig';
 
@@ -16,6 +17,7 @@ import MongooseConfig from './configs/MongooseConfig';
     TypeOrmModuleConfig,
     MongooseConfig,
     MulterModule.register({ storage: multerStorage }),
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
