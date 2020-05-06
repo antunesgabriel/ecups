@@ -14,6 +14,7 @@ import MongooseConfig from './configs/MongooseConfig';
 // Modules
 import { AdminModule } from '@modules/admin/admin/admin.module';
 import { AuthModule } from '@modules/auth/auth.module';
+import { GameModule } from './modules/admin/game/game.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from '@modules/auth/auth.module';
     MulterModule.register({ storage: multerStorage }),
     AdminModule,
     AuthModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],

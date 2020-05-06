@@ -6,7 +6,7 @@ export class GameEntity {
   @PrimaryGeneratedColumn({ name: 'game_id' })
   gameId: number;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false, type: 'varchar', unique: true })
   game: string;
 
   @Column({ nullable: false, type: 'varchar' })
