@@ -30,6 +30,7 @@ export class AuthService {
         'userId',
         'nickname',
       ],
+      relations: ['role', 'address'],
     });
 
     if (!user) {
