@@ -6,7 +6,7 @@ export class RoleEntity {
   @PrimaryGeneratedColumn({ name: 'role_id' })
   roleId: number;
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: false, type: 'varchar', unique: true })
   role: string;
 
   @OneToMany(

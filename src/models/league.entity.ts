@@ -26,10 +26,10 @@ export class LeagueEntity {
   @Column({ name: 'round_trip', type: 'boolean', nullable: false })
   roundTrip: boolean;
 
-  @Column({ name: 'max_players', nullable: true, type: 'number' })
+  @Column({ name: 'max_players', nullable: true, type: 'int', default: null })
   maxPlayers: number;
 
-  @Column({ name: 'max_teams', nullable: true, type: 'number' })
+  @Column({ name: 'max_teams', nullable: true, type: 'int', default: null })
   maxTeams: number;
 
   // team ou player
