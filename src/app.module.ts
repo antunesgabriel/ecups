@@ -19,6 +19,7 @@ import { RoleModule } from './modules/admin/role/role.module';
 import { UserModule } from './modules/user/user.module';
 import { AvatarModule } from './modules/avatar/avatar.module';
 import { AddressModule } from './modules/address/address.module';
+import { LeagueTypeModule } from './modules/admin/league-type/league-type.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AddressModule } from './modules/address/address.module';
     UserModule,
     AvatarModule,
     AddressModule,
+    LeagueTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
