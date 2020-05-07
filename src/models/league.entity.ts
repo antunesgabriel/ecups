@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { GameEntity } from './game.entity';
 import { LeagueTypeEntity } from './leagueType.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'leagues' })
 export class LeagueEntity {
@@ -37,10 +38,24 @@ export class LeagueEntity {
   @Column({ nullable: false })
   competitor: string;
 
+  @Column({ name: 'league_start', nullable: true, type: 'timestamp' })
+  leagueStart: Date;
+
+  @Column({ name: 'league_end', nullable: true, type: 'timestamp' })
+  leagueEnd: Date;
+
+  @Column({ name: 'need_address', nullable: false, type: 'boolean' })
+  needAddress: boolean;
+
+  @Column({ name: 'started', nullable: false, type: 'boolean', default: false })
+  started: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
+  @Exclude()
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', insert: false, nullable: true })
+  @Exclude()
   updatedAt: Date;
 
   //Relacionamento

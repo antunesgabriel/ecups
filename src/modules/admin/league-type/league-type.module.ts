@@ -8,5 +8,6 @@ import { LeagueTypeRepository } from './league-type.repository';
   controllers: [LeagueTypeController],
   providers: [LeagueTypeService],
   imports: [TypeOrmModule.forFeature([LeagueTypeRepository])],
+  exports: [LeagueTypeService],
 })
 export class LeagueTypeModule {}

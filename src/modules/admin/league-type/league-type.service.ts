@@ -72,4 +72,8 @@ export class LeagueTypeService {
   async all(): Promise<LeagueTypeEntity[] | null> {
     return await this._leagueTypeRepository.find();
   }
+
+  async findById(leagueTypeId: number): Promise<LeagueTypeEntity> {
+    return await this._leagueTypeRepository.findOne({ leagueTypeId });
+  }
 }
