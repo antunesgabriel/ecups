@@ -7,16 +7,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AdminRepository } from './admin.repository';
 import { AdminCreateDTO } from './dto/admin-create.dto';
 import { compare } from 'bcryptjs';
-import { Repository } from 'typeorm';
 import { RoleEntity } from '@models/role.entity';
+import { RoleService } from '../role/role.service';
 
 @Injectable()
 export class AdminService {
   constructor(
     @InjectRepository(AdminRepository)
     private readonly _adminRepository: AdminRepository,
-    @InjectRepository(RoleEntity)
-    private readonly _roleRepository: Repository<RoleEntity>,
+    private readonly _roleService: RoleService,
   ) {}
 
   async create(adminCreateDTO: AdminCreateDTO): Promise<any> {
@@ -38,7 +37,7 @@ export class AdminService {
       throw new BadRequestException('Já existe um usuario com este nickname');
     }
 
-    const role = await this.getRoleAdmin();
+    const role = await this._roleService.findOrCreate('ADMIN');
     const admin = this._adminRepository.create({ ...rest, role });
     await this._adminRepository.save(admin);
 
@@ -57,15 +56,5 @@ export class AdminService {
     const accept = await compare(key, envKey);
 
     return accept;
-  }
-
-  async getRoleAdmin(): Promise<RoleEntity> {
-    let role = await this._roleRepository.findOne({ role: 'ADMIN' });
-
-    if (!role) {
-      role = await this._roleRepository.save({ role: 'ADMIN' });
-    }
-
-    return role;
   }
 }

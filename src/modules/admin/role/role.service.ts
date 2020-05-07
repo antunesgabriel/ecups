@@ -63,4 +63,16 @@ export class RoleService {
 
     return { message: 'Função excluida com succeso' };
   }
+
+  async findOrCreate(role: string): Promise<RoleEntity> {
+    let find = await this._roleRepository.findOne({ role });
+
+    if (!find) {
+      find = await this._roleRepository.save(
+        this._roleRepository.create({ role }),
+      );
+    }
+
+    return find;
+  }
 }
