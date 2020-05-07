@@ -15,6 +15,7 @@ import { IFeedback } from '@interfaces/feedback.interface';
 import { RoleService } from '@modules/admin/role/role.service';
 import { IUser } from '@utils/user.interface';
 import { AuthService } from '@modules/auth/auth.service';
+import { AddressEntity } from '@models/address.entity';
 
 @Injectable()
 export class UserService {
@@ -174,5 +175,18 @@ export class UserService {
     );
 
     return filename;
+  }
+
+  async findByNickname(nickname: string): Promise<UserEntity | null> {
+    return await this._userRepository.findOne({
+      where: { nickname },
+      relations: ['role', 'address'],
+    });
+  }
+
+  async addAddress(address: AddressEntity, nickname: string): Promise<number> {
+    const result = await this._userRepository.update({ nickname }, { address });
+
+    return result.affected;
   }
 }
