@@ -14,6 +14,7 @@ import { UserCreateDTO } from './dto/user-create.dto';
 import { IFeedback } from '@interfaces/feedback.interface';
 import { RoleService } from '@modules/admin/role/role.service';
 import { IUser } from '@utils/user.interface';
+import { AuthService } from '@modules/auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
     @InjectRepository(UserRepository)
     private readonly _userRepository: UserRepository,
     private readonly _roleService: RoleService,
+    private readonly _authService: AuthService,
   ) {}
 
   async index(options: IPaginationOptions): Promise<Pagination<UserEntity>> {
@@ -51,7 +53,7 @@ export class UserService {
     userId: number,
     user: UserUpdateDTO,
     userAuth: IUser,
-  ): Promise<IFeedback> {
+  ): Promise<any> {
     let selectUser: UserEntity;
 
     if (userAuth.role === 'PLAYER') {
@@ -98,7 +100,14 @@ export class UserService {
 
     await this._userRepository.update({ userId: selectUser.userId }, user);
 
-    return { message: 'Informações atualizadas' };
+    const updatedUser = await this._userRepository.findOne({
+      where: { userId: selectUser.userId },
+      relations: ['role', 'address'],
+    });
+
+    const payload = await this._authService.loginUser(updatedUser);
+
+    return { message: 'Informações atualizadas', ...payload };
   }
 
   async destroy(userId: number): Promise<IFeedback> {

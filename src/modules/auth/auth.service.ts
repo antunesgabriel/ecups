@@ -54,6 +54,6 @@ export class AuthService {
       role: payload.role.role,
     });
 
-    return { _token, player: payload };
+    return { _token, user: payload };
   }
 }
