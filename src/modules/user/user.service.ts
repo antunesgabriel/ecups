@@ -27,8 +27,12 @@ export class UserService {
   ) {}
 
   async index(options: IPaginationOptions): Promise<Pagination<UserEntity>> {
+    const playerRole = await this._roleService.findOrCreate('PLAYER');
+
     const query = this._userRepository
       .createQueryBuilder('user')
+      .innerJoinAndSelect('user.role', 'role')
+      .where(`role.role_id = ${playerRole.roleId}`)
       .orderBy('name', 'ASC');
 
     return paginate<UserEntity>(query, options);
