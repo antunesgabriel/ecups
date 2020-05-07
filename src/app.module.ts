@@ -17,6 +17,7 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { GameModule } from './modules/admin/game/game.module';
 import { RoleModule } from './modules/admin/role/role.module';
 import { UserModule } from './modules/user/user.module';
+import { AvatarModule } from './modules/avatar/avatar.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserModule } from './modules/user/user.module';
     GameModule,
     RoleModule,
     UserModule,
+    AvatarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

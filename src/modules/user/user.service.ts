@@ -129,4 +129,13 @@ export class UserService {
 
     return message;
   }
+
+  async updateAvatar(filename: string, user: IUser): Promise<string> {
+    await this._userRepository.update(
+      { userId: user.userId },
+      { avatar: filename },
+    );
+
+    return filename;
+  }
 }
