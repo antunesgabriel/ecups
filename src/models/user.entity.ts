@@ -67,11 +67,13 @@ export class UserEntity {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async hashPassword(): Promise<void> {
-    const rounds = getRounds(this.password);
+  async hashPassword(pass: string | undefined): Promise<string> {
+    const rounds = getRounds(pass || this.password);
     if (!rounds) {
       const SALT = Number(process.env.CONF_PASS_SALT);
-      this.password = await hash(this.password, SALT);
+
+      this.password = await hash(pass || this.password, SALT);
+      return this.password;
     }
   }
 

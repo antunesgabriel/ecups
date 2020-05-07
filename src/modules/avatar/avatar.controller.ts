@@ -6,6 +6,7 @@ import {
   UseGuards,
   Res,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -25,7 +26,6 @@ export class AvatarController {
 
   @Post()
   @UseGuards(JwtAuthGuard, UserGuard)
-  @Roles('ADMIN', 'PLAYER')
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: multerStorage,
@@ -37,6 +37,9 @@ export class AvatarController {
     @Res() res: Response,
     @User() user: IUser,
   ): Promise<Response> {
+    if (!file) {
+      throw new BadRequestException('Por favor selecione uma foto para upload');
+    }
     const filename = await this._userService.updateAvatar(file.filename, user);
     return res.status(HttpStatus.OK).json({ filename });
   }

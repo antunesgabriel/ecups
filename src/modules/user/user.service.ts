@@ -58,20 +58,48 @@ export class UserService {
 
     if (userAuth.role === 'PLAYER') {
       selectUser = await this._userRepository.findOne({
-        nickname: userAuth.nickname,
+        where: { nickname: userAuth.nickname },
+        select: [
+          'avatar',
+          'name',
+          'nickname',
+          'password',
+          'email',
+          'surname',
+          'userId',
+        ],
       });
     }
 
     if (userAuth.role === 'ADMIN') {
-      selectUser = await this._userRepository.findOne({ userId });
+      selectUser = await this._userRepository.findOne({
+        where: { userId },
+        select: [
+          'avatar',
+          'name',
+          'nickname',
+          'password',
+          'email',
+          'surname',
+          'userId',
+        ],
+      });
 
       if (!selectUser) {
         throw new BadRequestException('Usuario informado não possui cadastro');
       }
     }
 
+    if (user.password && !user.oldPassword) {
+      throw new BadRequestException('Senha de confirmação invalida');
+    }
+
     if (user.password && !(await selectUser.checkPassword(user.oldPassword))) {
       throw new BadRequestException('Senha de confirmação incorreta');
+    }
+
+    if (user.password && (await selectUser.checkPassword(user.oldPassword))) {
+      user.password = await selectUser.hashPassword(user.password);
     }
 
     delete user.oldPassword;
