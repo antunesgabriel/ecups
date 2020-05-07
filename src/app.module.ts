@@ -16,6 +16,7 @@ import { AdminModule } from '@modules/admin/admin/admin.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { GameModule } from './modules/admin/game/game.module';
 import { RoleModule } from './modules/admin/role/role.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RoleModule } from './modules/admin/role/role.module';
     AuthModule,
     GameModule,
     RoleModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
