@@ -22,6 +22,8 @@ import { Roles } from '@decorators/roles.decorator';
 import { RoleCreateDTO } from './dto/role-create.dto';
 import { RoleUpdateDTO } from './dto/role-update.dto';
 
+const URL = process.env.APP_URL;
+
 @Controller('role')
 export class RoleController {
   constructor(private readonly _roleService: RoleService) {}
