@@ -33,7 +33,7 @@ export class UserService {
       .createQueryBuilder('user')
       .innerJoinAndSelect('user.role', 'role')
       .where(`role.role_id = ${playerRole.roleId}`)
-      .orderBy('name', 'ASC');
+      .orderBy('user.name', 'ASC');
 
     return paginate<UserEntity>(query, options);
   }
