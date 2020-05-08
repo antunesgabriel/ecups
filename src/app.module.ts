@@ -21,6 +21,7 @@ import { AvatarModule } from './modules/avatar/avatar.module';
 import { AddressModule } from './modules/address/address.module';
 import { LeagueTypeModule } from './modules/admin/league-type/league-type.module';
 import { LeagueModule } from './modules/league/league.module';
+import { LeagueThumbModule } from './modules/league-thumb/league-thumb.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { LeagueModule } from './modules/league/league.module';
     AddressModule,
     LeagueTypeModule,
     LeagueModule,
+    LeagueThumbModule,
   ],
   controllers: [AppController],
   providers: [AppService],

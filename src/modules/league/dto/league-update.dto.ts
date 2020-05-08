@@ -5,4 +5,8 @@ export class LeagueUpdateDTO extends LeagueCreateDTO {
   @IsOptional()
   @IsBoolean()
   started: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  active: boolean;
 }

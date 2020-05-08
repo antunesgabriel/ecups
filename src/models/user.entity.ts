@@ -9,12 +9,14 @@ import {
   BeforeUpdate,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { hash, compare, getRounds } from 'bcryptjs';
 
 import { AddressEntity } from './address.entity';
 import { RoleEntity } from './role.entity';
+import { LeagueEntity } from './league.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -65,6 +67,13 @@ export class UserEntity {
   @JoinColumn({ name: 'role_id' })
   role: RoleEntity;
 
+  @OneToMany(
+    () => LeagueEntity,
+    league => league.user,
+  )
+  leagues: LeagueEntity[];
+
+  // Metodos
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(pass: string | undefined): Promise<string> {

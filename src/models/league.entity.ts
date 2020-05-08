@@ -10,13 +10,14 @@ import {
 import { GameEntity } from './game.entity';
 import { LeagueTypeEntity } from './leagueType.entity';
 import { Exclude } from 'class-transformer';
+import { UserEntity } from './user.entity';
 
 @Entity({ name: 'leagues' })
 export class LeagueEntity {
   @PrimaryGeneratedColumn({ name: 'league_id' })
   leagueId: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   league: string;
 
   @Column({ type: 'text', nullable: true })
@@ -35,8 +36,13 @@ export class LeagueEntity {
   maxTeams: number;
 
   // team ou player
-  @Column({ nullable: false })
-  competitor: string;
+  @Column({
+    nullable: false,
+    type: 'boolean',
+    name: 'for_teams',
+    default: true,
+  })
+  forTeams: boolean;
 
   @Column({ name: 'league_start', nullable: true, type: 'timestamp' })
   leagueStart: Date;
@@ -49,6 +55,12 @@ export class LeagueEntity {
 
   @Column({ name: 'started', nullable: false, type: 'boolean', default: false })
   started: boolean;
+
+  @Column({ nullable: false, default: true, type: 'boolean' })
+  active: boolean;
+
+  @Column({ nullable: true, default: null, type: 'text' })
+  thumb: string;
 
   @CreateDateColumn({ name: 'created_at' })
   @Exclude()
@@ -72,4 +84,12 @@ export class LeagueEntity {
   )
   @JoinColumn({ name: 'leaguetype_id' })
   leagueType: LeagueTypeEntity;
+
+  @ManyToOne(
+    () => UserEntity,
+    user => user.leagues,
+    { eager: true },
+  )
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
 }

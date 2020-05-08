@@ -65,4 +65,8 @@ export class GameService {
     const games = await this._gameRepository.find();
     return games;
   }
+
+  async findById(gameId: number): Promise<GameEntity | null> {
+    return await this._gameRepository.findOne({ gameId });
+  }
 }

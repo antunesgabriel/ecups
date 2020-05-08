@@ -33,8 +33,8 @@ export class LeagueCreateDTO {
   maxTeams: number;
 
   @IsNotEmpty({ message: 'Informe se a liga é para time ou player' })
-  @IsString()
-  competitor: string;
+  @IsBoolean()
+  forTeams: boolean;
 
   @IsOptional()
   @IsDateString()
@@ -50,4 +50,12 @@ export class LeagueCreateDTO {
   })
   @IsBoolean()
   needAddress: boolean;
+
+  @IsNotEmpty({ message: 'Informe o tipo da liga' })
+  @IsNumber()
+  leagueTypeId: number;
+
+  @IsNotEmpty({ message: 'Informe o game da liga' })
+  @IsNumber()
+  gameId: number;
 }

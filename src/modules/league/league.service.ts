@@ -1,11 +1,205 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
+
 import { LeagueRepository } from './league.repository';
+import { LeagueEntity } from '@models/league.entity';
+import { IUser } from '@utils/user.interface';
+import { IFeedback } from '@interfaces/feedback.interface';
+import { LeagueCreateDTO } from './dto/league-create.dto';
+import { UserService } from '@modules/user/user.service';
+
+import leagueDatesValidate from '@helpers/leagueDatesValidate';
+import { ILeagueFeedback } from './league-feedback.interface';
+import { LeagueUpdateDTO } from './dto/league-update.dto';
+import { LeagueTypeService } from '@modules/admin/league-type/league-type.service';
+import { GameService } from '@modules/admin/game/game.service';
 
 @Injectable()
 export class LeagueService {
   constructor(
     @InjectRepository(LeagueRepository)
     private readonly _leagueRepository: LeagueRepository,
+    private readonly _userService: UserService,
+    private readonly _leagueTypeService: LeagueTypeService,
+    private readonly _gameService: GameService,
   ) {}
+
+  async index(
+    options: IPaginationOptions,
+    authUser: IUser,
+  ): Promise<Pagination<LeagueEntity>> {
+    const query = this._leagueRepository
+      .createQueryBuilder('league')
+      .innerJoinAndSelect('league.game', 'game')
+      .innerJoinAndSelect('league.leagueType', 'leagueType')
+      .innerJoinAndSelect('league.user', 'user');
+
+    if (authUser.role === 'PLAYER') {
+      query.where(`user.user_id = ${authUser.userId}`);
+    }
+
+    query.orderBy('league.createdAt', 'DESC');
+
+    return paginate<LeagueEntity>(query, options);
+  }
+
+  async create(
+    leagueCreateDTO: LeagueCreateDTO,
+    authUser: IUser,
+  ): Promise<ILeagueFeedback> {
+    const user = await this._userService.findByNickname(authUser.nickname);
+
+    if (
+      await this._leagueRepository.findOne({ league: leagueCreateDTO.league })
+    ) {
+      throw new BadRequestException('Já existe uma liga com este nome');
+    }
+
+    const result = leagueDatesValidate(leagueCreateDTO);
+
+    if (!result.valid) {
+      throw new BadRequestException(result.message);
+    }
+
+    const game = await this._gameService.findById(leagueCreateDTO.gameId);
+    if (!game) {
+      throw new BadRequestException('O game da liga não está cadastrado');
+    }
+
+    const leagueType = await this._leagueTypeService.findById(
+      leagueCreateDTO.leagueTypeId,
+    );
+
+    if (!leagueType) {
+      throw new BadRequestException(
+        'O tipo de competição da liga não está cadastrada',
+      );
+    }
+
+    const newLeague = this._leagueRepository.create({
+      ...leagueCreateDTO,
+      user,
+      leagueType,
+      game,
+    });
+    const league = await this._leagueRepository.save(newLeague);
+
+    return { message: 'Liga criada com sucesso', league };
+  }
+
+  async update(
+    leagueId: number,
+    leagueUpdateDTO: LeagueUpdateDTO,
+    authUser: IUser,
+  ): Promise<ILeagueFeedback> {
+    // const user = await this._userService.findByNickname(authUser.nickname);
+
+    const leagueSelect = await this._leagueRepository.findOne({
+      where: { leagueId },
+      relations: ['user', 'leagueType', 'game'],
+    });
+
+    if (!leagueSelect) {
+      throw new BadRequestException('A liga informada não existe');
+    }
+
+    if (
+      authUser.role === 'PLAYER' &&
+      leagueSelect.user.userId !== authUser.userId
+    ) {
+      if (!leagueSelect) {
+        throw new BadRequestException(
+          'Você não pode editar esta liga, pois pertence a outro usuario',
+        );
+      }
+    }
+
+    if (
+      leagueSelect.league !== leagueUpdateDTO.league &&
+      (await this._leagueRepository.findOne({ league: leagueUpdateDTO.league }))
+    ) {
+      throw new BadRequestException('Já existe uma liga com este nome');
+    }
+
+    leagueSelect.league = leagueUpdateDTO.league;
+    leagueSelect.rules = leagueUpdateDTO.rules;
+    leagueSelect.description = leagueUpdateDTO.description;
+    leagueSelect.maxPlayers = leagueSelect.forTeams
+      ? null
+      : leagueUpdateDTO.maxPlayers || null;
+    leagueSelect.maxTeams = leagueSelect.forTeams
+      ? leagueUpdateDTO.maxTeams || null
+      : null;
+    leagueSelect.active = leagueUpdateDTO.active;
+
+    const result = leagueDatesValidate(leagueUpdateDTO);
+
+    if (!result.valid) {
+      throw new BadRequestException(result.message);
+    }
+
+    leagueSelect.leagueStart = leagueUpdateDTO.leagueStart;
+    leagueSelect.leagueEnd = leagueUpdateDTO.leagueEnd;
+
+    // TODO: Poder exigir ou não endereço caso não aja inscrições
+    // no campeonato. Poder atualiza se é pra players ou team tbm
+
+    const leagueUpdated = await this._leagueRepository.save(leagueSelect);
+
+    return { message: 'Liga atualizada com sucesso', league: leagueUpdated };
+  }
+
+  async destroy(leagueId: number, authUser: IUser): Promise<IFeedback> {
+    // implementar delete quando inscrições estiverem prontas
+    return { message: 'Liga deletada com sucesso' };
+  }
+
+  async all(options: IPaginationOptions): Promise<Pagination<LeagueEntity>> {
+    const query = this._leagueRepository
+      .createQueryBuilder('league')
+      .innerJoinAndSelect('league.game', 'game')
+      .innerJoinAndSelect('league.leagueType', 'leagueType')
+      .innerJoinAndSelect('league.user', 'user')
+      .where('league.active = :active', { active: true })
+      .orderBy('league.createdAt', 'DESC');
+
+    return paginate<LeagueEntity>(query, options);
+  }
+
+  async updateThumb(
+    leagueId: number,
+    filename: string,
+    authUser: IUser,
+  ): Promise<ILeagueFeedback> {
+    const leagueSelect = await this._leagueRepository.findOne({
+      where: { leagueId },
+      relations: ['user', 'leagueType', 'game'],
+    });
+
+    if (!leagueSelect) {
+      throw new BadRequestException('A liga informada não existe');
+    }
+
+    if (
+      authUser.role === 'PLAYER' &&
+      leagueSelect.user.userId !== authUser.userId
+    ) {
+      if (!leagueSelect) {
+        throw new BadRequestException(
+          'Você não pode editar esta liga, pois pertence a outro usuario',
+        );
+      }
+    }
+
+    leagueSelect.thumb = filename;
+
+    const leagueUpdated = await this._leagueRepository.save(leagueSelect);
+
+    return { message: 'Thumb atualizada com sucesso', league: leagueUpdated };
+  }
 }
