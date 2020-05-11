@@ -16,6 +16,8 @@ import { RoleService } from '@modules/admin/role/role.service';
 import { IUser } from '@utils/user.interface';
 import { AuthService } from '@modules/auth/auth.service';
 import { AddressEntity } from '@models/address.entity';
+import { subDays } from 'date-fns';
+import { calcPorcentage } from '@helpers/porcentage';
 
 @Injectable()
 export class UserService {
@@ -192,5 +194,42 @@ export class UserService {
     const result = await this._userRepository.update({ nickname }, { address });
 
     return result.affected;
+  }
+
+  async info(): Promise<any> {
+    const now = new Date();
+    const before = subDays(now, 30);
+    const beforeBefore = subDays(before, 30);
+
+    const queryValorFinal = this._userRepository
+      .createQueryBuilder('user')
+      .innerJoinAndSelect('user.role', 'role')
+      .where('user.createdAt BETWEEN :before AND :now', {
+        before,
+        now,
+      });
+
+    const queryValorInicial = this._userRepository
+      .createQueryBuilder('user')
+      .where('user.createdAt BETWEEN :beforeBefore AND :before', {
+        beforeBefore,
+        before,
+      });
+
+    const [[users, final], inicial, total] = await Promise.all([
+      queryValorFinal.getManyAndCount(),
+      queryValorInicial.getCount(),
+      this._userRepository.count(),
+    ]);
+
+    const porcentage = calcPorcentage(inicial, final);
+
+    return {
+      actual: final,
+      before: inicial,
+      porcentage,
+      total,
+      users,
+    };
   }
 }

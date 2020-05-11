@@ -18,6 +18,8 @@ import { ILeagueFeedback } from './league-feedback.interface';
 import { LeagueUpdateDTO } from './dto/league-update.dto';
 import { LeagueTypeService } from '@modules/admin/league-type/league-type.service';
 import { GameService } from '@modules/admin/game/game.service';
+import { subDays } from 'date-fns';
+import { calcPorcentage } from '@helpers/porcentage';
 
 @Injectable()
 export class LeagueService {
@@ -201,5 +203,40 @@ export class LeagueService {
     const leagueUpdated = await this._leagueRepository.save(leagueSelect);
 
     return { message: 'Thumb atualizada com sucesso', league: leagueUpdated };
+  }
+
+  async info(): Promise<any> {
+    const now = new Date();
+    const before = subDays(now, 30);
+    const beforeBefore = subDays(before, 30);
+
+    const queryValorFinal = this._leagueRepository
+      .createQueryBuilder('league')
+      .where('league.createdAt BETWEEN :before AND :now', {
+        before,
+        now,
+      });
+
+    const queryValorInicial = this._leagueRepository
+      .createQueryBuilder('league')
+      .where('league.createdAt BETWEEN :beforeBefore AND :before', {
+        beforeBefore,
+        before,
+      });
+
+    const [final, inicial, total] = await Promise.all([
+      queryValorFinal.getCount(),
+      queryValorInicial.getCount(),
+      this._leagueRepository.count(),
+    ]);
+
+    const porcentage = calcPorcentage(inicial, final);
+
+    return {
+      actual: final,
+      before: inicial,
+      porcentage,
+      total,
+    };
   }
 }
