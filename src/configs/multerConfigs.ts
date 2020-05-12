@@ -2,6 +2,7 @@ import { extname } from 'path';
 import { randomBytes } from 'crypto';
 import { diskStorage } from 'multer';
 import { resolve } from 'path';
+import { BadRequestException } from '@nestjs/common';
 
 export const editFileName = (req, file, callback) => {
   const name = file.originalname.split('.')[0];
@@ -17,7 +18,10 @@ export const multerStorage = diskStorage({
 
 export const imageFileFilter = (req, file, callback) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-    return callback(new Error('Extensão de imagem inválida!'), false);
+    return callback(
+      new BadRequestException('Extensão de imagem inválida!'),
+      false,
+    );
   }
   callback(null, true);
 };
