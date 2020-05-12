@@ -55,8 +55,13 @@ export class RoleService {
   }
 
   async destroy(roleId: number): Promise<IFeedback> {
-    if (!(await this._roleRepository.findOne({ roleId }))) {
+    const role = await this._roleRepository.findOne({ roleId })
+    if (!role) {
       throw new BadRequestException('A função informado não está cadastrada');
+    }
+
+    if(role.role === 'PLAYER' || role.role === 'ADMIN') {
+      throw new BadRequestException('Não é possivel excluir essa role pois faz parte do core do sistema')
     }
 
     await this._roleRepository.delete({ roleId });

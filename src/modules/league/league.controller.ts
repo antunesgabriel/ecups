@@ -40,7 +40,8 @@ export class LeagueController {
     @Res() res: Response,
     @User() user: IUser,
   ): Promise<Response> {
-    limit = limit > 30 ? 30 : limit;
+    limit = +limit > 30 ? 30 : limit;
+    page = +page ? page : 1;
 
     const paginate = await this._leagueService.index(
       {
@@ -91,7 +92,9 @@ export class LeagueController {
     @Query('limit') limit = 10,
     @Res() res: Response,
   ): Promise<Response> {
-    limit = limit > 30 ? 30 : limit;
+    limit = +limit > 30 ? 30 : limit;
+    page = +page ? page : 1;
+
     const paginate = await this._leagueService.all({
       limit,
       page,
