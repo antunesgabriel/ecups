@@ -62,6 +62,8 @@ export class LeagueEntity {
   @Column({ nullable: true, default: null, type: 'text' })
   thumb: string;
 
+  selectGame: string;
+
   @CreateDateColumn({ name: 'created_at' })
   @Exclude()
   createdAt: Date;

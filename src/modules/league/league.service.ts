@@ -37,9 +37,9 @@ export class LeagueService {
   ): Promise<Pagination<LeagueEntity>> {
     const query = this._leagueRepository
       .createQueryBuilder('league')
-      .innerJoinAndSelect('league.game', 'game')
-      .innerJoinAndSelect('league.leagueType', 'leagueType')
-      .innerJoinAndSelect('league.user', 'user');
+      .leftJoinAndSelect('league.game', 'game')
+      .leftJoinAndSelect('league.leagueType', 'leagueType')
+      .leftJoinAndSelect('league.user', 'user');
 
     if (authUser.role === 'PLAYER') {
       query.where(`user.user_id = ${authUser.userId}`);
@@ -131,9 +131,8 @@ export class LeagueService {
     leagueSelect.league = leagueUpdateDTO.league;
     leagueSelect.rules = leagueUpdateDTO.rules;
     leagueSelect.description = leagueUpdateDTO.description;
-    leagueSelect.maxPlayers = leagueSelect.forTeams
-      ? null
-      : leagueUpdateDTO.maxPlayers || null;
+    leagueSelect.roundTrip = leagueUpdateDTO.roundTrip;
+    leagueSelect.maxPlayers = leagueUpdateDTO.maxPlayers;
     leagueSelect.maxTeams = leagueSelect.forTeams
       ? leagueUpdateDTO.maxTeams || null
       : null;
