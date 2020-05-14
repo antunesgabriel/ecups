@@ -42,7 +42,7 @@ export class LeagueService {
       .leftJoinAndSelect('league.user', 'user');
 
     if (authUser.role === 'PLAYER') {
-      query.where(`user.user_id = ${authUser.userId}`);
+      query.where(`user.userId = ${authUser.userId}`);
     }
 
     query.orderBy('league.createdAt', 'DESC');
@@ -156,7 +156,30 @@ export class LeagueService {
   }
 
   async destroy(leagueId: number, authUser: IUser): Promise<IFeedback> {
-    // implementar delete quando inscrições estiverem prontas
+    const leagueSelect = await this._leagueRepository.findOne({
+      where: { leagueId },
+      relations: ['user', 'leagueType', 'game'],
+    });
+
+    if (!leagueSelect) {
+      throw new BadRequestException('A liga informada não existe');
+    }
+
+    if (
+      authUser.role === 'PLAYER' &&
+      leagueSelect.user.userId !== authUser.userId
+    ) {
+      if (!leagueSelect) {
+        throw new BadRequestException(
+          'Você não pode editar esta liga, pois pertence a outro usuario',
+        );
+      }
+    }
+
+    await this._leagueRepository.softDelete({
+      leagueId: leagueSelect.leagueId,
+    });
+
     return { message: 'Liga deletada com sucesso' };
   }
 
@@ -166,7 +189,9 @@ export class LeagueService {
       .innerJoinAndSelect('league.game', 'game')
       .innerJoinAndSelect('league.leagueType', 'leagueType')
       .innerJoinAndSelect('league.user', 'user')
-      .where('league.active = :active', { active: true })
+      .where('league.active = :active', {
+        active: true,
+      })
       .orderBy('league.createdAt', 'DESC');
 
     return paginate<LeagueEntity>(query, options);

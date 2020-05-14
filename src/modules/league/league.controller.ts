@@ -9,8 +9,6 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
-  UseInterceptors,
-  UploadedFile,
   Put,
   Param,
   Delete,
@@ -83,6 +81,18 @@ export class LeagueController {
       leagueUpdateDTO,
       user,
     );
+    return res.status(HttpStatus.OK).json(feedback);
+  }
+
+  @Delete(':leagueId')
+  @UseGuards(JwtAuthGuard, UserGuard)
+  @Roles('ADMIN', 'PLAYER')
+  async destroy(
+    @Res() res: Response,
+    @User() user: IUser,
+    @Param('leagueId') leagueId: number,
+  ): Promise<Response> {
+    const feedback = await this._leagueService.destroy(leagueId, user);
     return res.status(HttpStatus.OK).json(feedback);
   }
 

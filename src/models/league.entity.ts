@@ -6,6 +6,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { GameEntity } from './game.entity';
 import { LeagueTypeEntity } from './leagueType.entity';
@@ -71,6 +72,14 @@ export class LeagueEntity {
   @UpdateDateColumn({ name: 'updated_at', insert: false, nullable: true })
   @Exclude()
   updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    nullable: true,
+    default: null,
+    type: 'timestamp',
+  })
+  deletedAt: Date;
 
   //Relacionamento
   @ManyToOne(
