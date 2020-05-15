@@ -25,7 +25,7 @@ export class TeamService {
     private readonly _userService: UserService,
   ) {}
 
-  async index(options: IPaginationOptions): Promise<Pagination<TeamEntity>> {
+  async paginate(options: IPaginationOptions): Promise<Pagination<TeamEntity>> {
     const query = this._teamRepository
       .createQueryBuilder('team')
       .leftJoinAndSelect('team.members', 'members')
@@ -38,14 +38,21 @@ export class TeamService {
     teamDTO.team = teamDTO.team.trim();
     const user = await this._userService.findByNickname(authUser.nickname);
 
+    if (user.team) {
+      throw new BadRequestException(
+        'Você não pode criar um time pois já faz parte de um',
+      );
+    }
+
     if (await this._teamRepository.findOne({ team: teamDTO.team })) {
       throw new BadRequestException('Ja existe um time com este nome');
     }
     const newTeam = this._teamRepository.create(teamDTO);
     newTeam.boss = user;
+    newTeam.members = [user];
 
     const team = await this._teamRepository.save(newTeam);
-
+    console.log(team);
     return { message: 'Time criado com sucesso', team };
   }
 
@@ -62,6 +69,10 @@ export class TeamService {
       throw new NotFoundException('Time não encotrado');
     }
 
+    if (team.teamId !== user.team.teamId) {
+      throw new NotFoundException('Você não faz parte deste time');
+    }
+
     if (!(await this.isBoss(teamId, user))) {
       throw new BadRequestException(
         'Somente o lider do time pode fazer alterações',
@@ -76,6 +87,7 @@ export class TeamService {
     }
 
     team.team = teamDTO.team;
+    team.bio = teamDTO.bio;
 
     const reloaded = await this._teamRepository.save(team);
 
@@ -123,19 +135,24 @@ export class TeamService {
 
     team.shield = filename;
 
-    const reloaded = await this._teamRepository.save(team);
+    await this._teamRepository.save(team);
 
-    return { message: 'Escudo atualizado', team: reloaded };
+    return { message: 'Escudo atualizado', filename };
   }
 
-  async myTeam(authUser: IUser): Promise<TeamEntity | null> {
+  async show(authUser: IUser): Promise<any> {
     const user = await this._userService.findByNickname(authUser.nickname);
 
-    const team = await this._teamRepository.findOne({
-      where: [{ boss: user }, { members: [user] }],
-    });
+    const team = await this._teamRepository
+      .createQueryBuilder('team')
+      .leftJoinAndSelect('team.boss', 'boss')
+      .leftJoinAndSelect('team.members', 'member')
+      .where('(team.user_id = :userId) OR (member.userId = :userId)', {
+        userId: user.userId,
+      })
+      .getOne();
 
-    return team;
+    return { team: team || null };
   }
 
   private async isBoss(teamId: number, user: UserEntity): Promise<boolean> {

@@ -20,6 +20,9 @@ export class TeamEntity {
   @Column({ nullable: true, type: 'text', default: null })
   shield: string;
 
+  @Column({ nullable: true, default: null, type: 'text' })
+  bio: string;
+
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp' })
   deletedAt: Date;
 

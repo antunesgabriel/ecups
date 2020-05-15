@@ -30,7 +30,7 @@ export class AuthService {
         'userId',
         'nickname',
       ],
-      relations: ['role', 'address'],
+      relations: ['role', 'address', 'team'],
     });
 
     if (!user) {

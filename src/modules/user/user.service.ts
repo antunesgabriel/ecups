@@ -137,7 +137,7 @@ export class UserService {
 
     const updatedUser = await this._userRepository.findOne({
       where: { userId: selectUser.userId },
-      relations: ['role', 'address'],
+      relations: ['role', 'address', 'team'],
     });
 
     const payload = await this._authService.loginUser(updatedUser);
@@ -186,7 +186,7 @@ export class UserService {
   async findByNickname(nickname: string): Promise<UserEntity | null> {
     return await this._userRepository.findOne({
       where: { nickname },
-      relations: ['role', 'address'],
+      relations: ['role', 'address', 'team'],
     });
   }
 

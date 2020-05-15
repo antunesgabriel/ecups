@@ -5,6 +5,7 @@ import { LeagueEntity } from '@models/league.entity';
 import { LeagueTypeEntity } from '@models/leagueType.entity';
 import { GameEntity } from '@models/game.entity';
 import { AddressEntity } from '@models/address.entity';
+import { TeamEntity } from '@models/team.entity';
 
 export default TypeOrmModule.forRoot({
   type: 'postgres',
@@ -20,6 +21,7 @@ export default TypeOrmModule.forRoot({
     LeagueTypeEntity,
     GameEntity,
     AddressEntity,
+    TeamEntity,
   ],
   synchronize: true,
 });

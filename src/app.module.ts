@@ -24,6 +24,7 @@ import { LeagueModule } from './modules/league/league.module';
 import { LeagueThumbModule } from './modules/league-thumb/league-thumb.module';
 import { HomeModule } from './modules/admin/home/home.module';
 import { TeamModule } from './modules/team/team.module';
+import { TeamShieldModule } from './modules/team-shield/team-shield.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { TeamModule } from './modules/team/team.module';
     LeagueThumbModule,
     HomeModule,
     TeamModule,
+    TeamShieldModule,
   ],
   controllers: [AppController],
   providers: [AppService],
