@@ -17,6 +17,7 @@ import { hash, compare, getRounds } from 'bcryptjs';
 import { AddressEntity } from './address.entity';
 import { RoleEntity } from './role.entity';
 import { LeagueEntity } from './league.entity';
+import { TeamEntity } from './team.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -72,6 +73,21 @@ export class UserEntity {
     league => league.user,
   )
   leagues: LeagueEntity[];
+
+  @ManyToOne(
+    () => TeamEntity,
+    team => team.members,
+    { onDelete: 'SET NULL' },
+  )
+  @JoinColumn({ name: 'team_id' })
+  team: TeamEntity;
+
+  @OneToOne(
+    () => TeamEntity,
+    team => team.boss,
+    { onDelete: 'SET NULL' },
+  )
+  myTeam: TeamEntity;
 
   // Metodos
   @BeforeInsert()

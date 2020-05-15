@@ -23,6 +23,7 @@ import { LeagueTypeModule } from './modules/admin/league-type/league-type.module
 import { LeagueModule } from './modules/league/league.module';
 import { LeagueThumbModule } from './modules/league-thumb/league-thumb.module';
 import { HomeModule } from './modules/admin/home/home.module';
+import { TeamModule } from './modules/team/team.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { HomeModule } from './modules/admin/home/home.module';
     LeagueModule,
     LeagueThumbModule,
     HomeModule,
+    TeamModule,
   ],
   controllers: [AppController],
   providers: [AppService],
