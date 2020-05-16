@@ -11,12 +11,13 @@ export const NotificationSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    user: {
+    userId: {
       type: Number,
       required: true,
     },
     link: {
       type: String,
+      required: false,
     },
   },
   { timestamps: true },

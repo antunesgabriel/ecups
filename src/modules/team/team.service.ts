@@ -161,9 +161,14 @@ export class TeamService {
     return { team };
   }
 
-  private async isBoss(teamId: number, user: UserEntity): Promise<boolean> {
-    return !!(await this._teamRepository.findOne({
+  async isBoss(teamId: number, user: UserEntity): Promise<TeamEntity | null> {
+    return await this._teamRepository.findOne({
       where: { teamId, boss: user },
-    }));
+      relations: ['boss', 'members'],
+    });
+  }
+
+  async findById(teamId: number): Promise<TeamEntity | null> {
+    return await this._teamRepository.findOne({ teamId });
   }
 }

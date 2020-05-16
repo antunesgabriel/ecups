@@ -41,6 +41,7 @@ export class UserService {
   }
 
   async create(user: UserCreateDTO): Promise<IFeedback> {
+    user.nickname = user.nickname.replace(/[\s\W]/gi, '');
     const isValid = await this.validateEmailNickname(user.email, user.nickname);
 
     if (isValid) {
@@ -122,6 +123,10 @@ export class UserService {
       throw new BadRequestException(
         'Já existe um usuario cadastrado com este email',
       );
+    }
+
+    if (user.nickname !== selectUser.nickname) {
+      user.nickname = user.nickname.replace(/[\s\W]/gi, '');
     }
 
     if (
@@ -231,5 +236,9 @@ export class UserService {
       total,
       users,
     };
+  }
+
+  async save(user: UserEntity): Promise<UserEntity> {
+    return await this._userRepository.save(user);
   }
 }
