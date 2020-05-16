@@ -45,14 +45,15 @@ export class TeamService {
     }
 
     if (await this._teamRepository.findOne({ team: teamDTO.team })) {
-      throw new BadRequestException('Ja existe um time com este nome');
+      throw new BadRequestException('Já existe um time com este nome');
     }
     const newTeam = this._teamRepository.create(teamDTO);
     newTeam.boss = user;
     newTeam.members = [user];
 
     const team = await this._teamRepository.save(newTeam);
-    console.log(team);
+    delete team.members;
+    delete team.boss;
     return { message: 'Time criado com sucesso', team };
   }
 
@@ -90,6 +91,9 @@ export class TeamService {
     team.bio = teamDTO.bio;
 
     const reloaded = await this._teamRepository.save(team);
+
+    delete reloaded.members;
+    delete reloaded.boss;
 
     return { message: 'Time atualizado', team: reloaded };
   }
@@ -143,16 +147,18 @@ export class TeamService {
   async show(authUser: IUser): Promise<any> {
     const user = await this._userService.findByNickname(authUser.nickname);
 
-    const team = await this._teamRepository
-      .createQueryBuilder('team')
-      .leftJoinAndSelect('team.boss', 'boss')
-      .leftJoinAndSelect('team.members', 'member')
-      .where('(team.user_id = :userId) OR (member.userId = :userId)', {
-        userId: user.userId,
-      })
-      .getOne();
+    if (!user.team) {
+      throw new BadRequestException(
+        'Você não faz parte de um time, crie um ou aceite o convite de algum time',
+      );
+    }
 
-    return { team: team || null };
+    const team = await this._teamRepository.findOne({
+      where: { teamId: user.team.teamId },
+      relations: ['boss', 'members'],
+    });
+
+    return { team };
   }
 
   private async isBoss(teamId: number, user: UserEntity): Promise<boolean> {

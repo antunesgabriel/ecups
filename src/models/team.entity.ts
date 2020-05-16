@@ -36,7 +36,7 @@ export class TeamEntity {
   @OneToOne(
     () => UserEntity,
     user => user.myTeam,
-    { eager: true, onDelete: 'SET NULL' },
+    { onDelete: 'SET NULL' },
   )
   @JoinColumn({ name: 'user_id' })
   boss: UserEntity;
