@@ -92,6 +92,7 @@ export class InvitationService {
     await this._notificationService.create({
       message: `Você recebeu um convite do time ${team.team} acesse a pagina de convites para aceita-lo ou recusar`,
       userId: player.userId,
+      link: '/player/invitations',
     });
 
     await this._notificationService.create({
@@ -142,7 +143,19 @@ export class InvitationService {
         );
       }
 
+      if (team.members.length >= 7) {
+        throw new BadRequestException(
+          'O numero maximo de 7 integrante foi atingido',
+        );
+      }
+
       await this._userService.setTeam(user, team);
+
+      await this._notificationService.create({
+        message: `O player ${user.nickname} aceitou seu convite e agora faz parte do seu time`,
+        userId: team.boss.userId,
+        link: '/player/team',
+      });
     }
 
     invitation.accept = invitationUpdateDTO.accept;

@@ -4,5 +4,5 @@ export class Notification extends Document {
   message: string;
   read: boolean;
   userId: number;
-  link: string;
+  link?: string;
 }

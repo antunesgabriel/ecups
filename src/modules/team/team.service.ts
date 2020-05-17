@@ -169,7 +169,10 @@ export class TeamService {
   }
 
   async findById(teamId: number): Promise<TeamEntity | null> {
-    return await this._teamRepository.findOne({ teamId });
+    return await this._teamRepository.findOne({
+      where: { teamId },
+      relations: ['boss'],
+    });
   }
 
   async save(team: TeamEntity): Promise<TeamEntity> {
