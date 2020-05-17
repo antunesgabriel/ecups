@@ -10,7 +10,7 @@ import {
   Body,
   Put,
 } from '@nestjs/common';
-import { Response, response } from 'express';
+import { Response } from 'express';
 import { InvitationService } from './invitation.service';
 import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
 import { UserGuard } from '@guards/user.guard';

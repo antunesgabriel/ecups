@@ -171,4 +171,8 @@ export class TeamService {
   async findById(teamId: number): Promise<TeamEntity | null> {
     return await this._teamRepository.findOne({ teamId });
   }
+
+  async save(team: TeamEntity): Promise<TeamEntity> {
+    return await this._teamRepository.save(team);
+  }
 }

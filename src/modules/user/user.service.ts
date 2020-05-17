@@ -18,6 +18,8 @@ import { AuthService } from '@modules/auth/auth.service';
 import { AddressEntity } from '@models/address.entity';
 import { subDays } from 'date-fns';
 import { calcPorcentage } from '@helpers/porcentage';
+import { TeamEntity } from '@models/team.entity';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -238,7 +240,7 @@ export class UserService {
     };
   }
 
-  async save(user: UserEntity): Promise<UserEntity> {
-    return await this._userRepository.save(user);
+  async setTeam(user: UserEntity, team: TeamEntity): Promise<UpdateResult> {
+    return await this._userRepository.update({ userId: user.userId }, { team });
   }
 }

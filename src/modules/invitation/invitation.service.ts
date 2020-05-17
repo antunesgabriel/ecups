@@ -72,9 +72,9 @@ export class InvitationService {
     }
 
     if (
-      !(await this._invitationModel
+      await this._invitationModel
         .findOne({ userId: player.userId, teamId: team.teamId, accept: null })
-        .exec())
+        .exec()
     ) {
       throw new BadRequestException(
         'Você já fez um convite a este player, aguarde a resposta dele',
@@ -92,6 +92,11 @@ export class InvitationService {
     await this._notificationService.create({
       message: `Você recebeu um convite do time ${team.team} acesse a pagina de convites para aceita-lo ou recusar`,
       userId: player.userId,
+    });
+
+    await this._notificationService.create({
+      message: 'Convite enviado com sucesso!',
+      userId: authUser.userId,
     });
 
     return {
@@ -137,9 +142,7 @@ export class InvitationService {
         );
       }
 
-      user.team = team;
-
-      await this._userService.save(user);
+      await this._userService.setTeam(user, team);
     }
 
     invitation.accept = invitationUpdateDTO.accept;
