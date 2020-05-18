@@ -22,7 +22,7 @@ export const ParticipantSchema = new mongoose.Schema(
     },
     creatorId: {
       type: Number,
-      required: 0,
+      required: true,
     },
   },
   { timestamps: true },

@@ -171,7 +171,7 @@ export class TeamService {
   async findById(teamId: number): Promise<TeamEntity | null> {
     return await this._teamRepository.findOne({
       where: { teamId },
-      relations: ['boss'],
+      relations: ['boss', 'members'],
     });
   }
 

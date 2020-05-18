@@ -26,6 +26,7 @@ import { TeamShieldModule } from './modules/team-shield/team-shield.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { InvitationModule } from './modules/invitation/invitation.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { ParticipantModule } from './modules/participant/participant.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
     NotificationModule,
     InvitationModule,
     SubscriptionModule,
+    ParticipantModule,
   ],
 })
 export class AppModule {

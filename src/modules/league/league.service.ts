@@ -18,7 +18,7 @@ import { ILeagueFeedback } from './league-feedback.interface';
 import { LeagueUpdateDTO } from './dto/league-update.dto';
 import { LeagueTypeService } from '@modules/admin/league-type/league-type.service';
 import { GameService } from '@modules/admin/game/game.service';
-import { subDays } from 'date-fns';
+import { subDays, addYears } from 'date-fns';
 import { calcPorcentage } from '@helpers/porcentage';
 
 @Injectable()
@@ -201,9 +201,14 @@ export class LeagueService {
       .innerJoinAndSelect('league.game', 'game')
       .innerJoinAndSelect('league.leagueType', 'leagueType')
       .innerJoinAndSelect('league.user', 'user')
-      .where('league.active = :active', {
-        active: true,
-      })
+      .where(
+        'league.active = :active AND league.leagueStart BETWEEN :start AND :end',
+        {
+          active: true,
+          start: new Date(),
+          end: addYears(new Date(), 1),
+        },
+      )
       .orderBy('league.createdAt', 'DESC');
 
     return paginate<LeagueEntity>(query, options);
@@ -274,5 +279,12 @@ export class LeagueService {
       porcentage,
       total,
     };
+  }
+
+  async findById(leagueId: number): Promise<LeagueEntity | null> {
+    return await this._leagueRepository.findOne({
+      where: { leagueId },
+      relations: ['user', 'game', 'leagueType'],
+    });
   }
 }
