@@ -183,7 +183,19 @@ export class LeagueService {
     return { message: 'Liga deletada com sucesso' };
   }
 
-  async all(options: IPaginationOptions): Promise<Pagination<LeagueEntity>> {
+  async all(
+    options: IPaginationOptions,
+    leagueId: number = null,
+  ): Promise<Pagination<LeagueEntity> | any> {
+    if (leagueId) {
+      const league = await this._leagueRepository.findOne({ leagueId });
+
+      if (!league) {
+        throw new BadRequestException('Liga não encontrada');
+      }
+
+      return { league: league };
+    }
     const query = this._leagueRepository
       .createQueryBuilder('league')
       .innerJoinAndSelect('league.game', 'game')

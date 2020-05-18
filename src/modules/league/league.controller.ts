@@ -12,6 +12,7 @@ import {
   Put,
   Param,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
@@ -100,16 +101,28 @@ export class LeagueController {
   async all(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
+    @Query('leagueId') leagueId: number | undefined,
     @Res() res: Response,
   ): Promise<Response> {
     limit = +limit > 30 ? 30 : limit;
     page = +page ? page : 1;
 
-    const paginate = await this._leagueService.all({
-      limit,
-      page,
-      route: `${URL}/league/all`,
-    });
+    if (leagueId) {
+      if (!Number.isInteger(+leagueId) || !+leagueId) {
+        throw new BadRequestException('Identificador de liga invalido');
+      }
+
+      leagueId = +leagueId;
+    }
+
+    const paginate = await this._leagueService.all(
+      {
+        limit,
+        page,
+        route: `${URL}/league/all`,
+      },
+      leagueId,
+    );
 
     return res.status(HttpStatus.OK).json(paginate);
   }
