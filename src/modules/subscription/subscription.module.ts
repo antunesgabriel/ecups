@@ -6,6 +6,7 @@ import { SubscriptionSchema } from '@schemas/subscription.schema';
 import { UserModule } from '@modules/user/user.module';
 import { TeamModule } from '@modules/team/team.module';
 import { LeagueModule } from '@modules/league/league.module';
+import { ParticipantModule } from '@modules/participant/participant.module';
 
 @Module({
   controllers: [SubscriptionController],
@@ -17,6 +18,7 @@ import { LeagueModule } from '@modules/league/league.module';
     UserModule,
     TeamModule,
     LeagueModule,
+    ParticipantModule,
   ],
 })
 export class SubscriptionModule {}

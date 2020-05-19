@@ -14,6 +14,7 @@ import { UserEntity } from '@models/user.entity';
 import { SubscriptionCreateDTO } from './dto/subscription-create.dto';
 import { LeagueEntity } from '@models/league.entity';
 import { isBefore, isAfter, parseISO } from 'date-fns';
+import { ParticipantService } from '@modules/participant/participant.service';
 
 @Injectable()
 export class SubscriptionService {
@@ -23,6 +24,7 @@ export class SubscriptionService {
     private readonly _userService: UserService,
     private readonly _leagueService: LeagueService,
     private readonly _teamService: TeamService,
+    private readonly _participantService: ParticipantService,
   ) {}
 
   async index(like: string, authUser: IUser): Promise<Subscription[]> {
@@ -88,6 +90,8 @@ export class SubscriptionService {
     if (league.forTeams) {
       return await this.subscribeTeam(user, league);
     }
+
+    return await this.subscribePlayer(user, league);
   }
 
   async subscribeTeam(
@@ -125,12 +129,35 @@ export class SubscriptionService {
       );
     }
 
-    // Validação da quantidade de players no campeonato
-
     const newSubscription = new this._subscriptionModel({
       team,
       league,
       teamId: team.teamId,
+      leagueId: league.leagueId,
+      organizerId: league.user.userId,
+    });
+
+    await newSubscription.save();
+
+    return await this.indexLikeAPlayer(player);
+  }
+
+  async subscribePlayer(player: UserEntity, league: LeagueEntity) {
+    if (
+      await this._subscriptionModel.findOne({
+        playerId: player.userId,
+        leagueId: league.leagueId,
+      })
+    ) {
+      throw new UnauthorizedException(
+        'Você já possui inscrição neste campeonato',
+      );
+    }
+
+    const newSubscription = new this._subscriptionModel({
+      player,
+      league,
+      playerId: player.userId,
       leagueId: league.leagueId,
       organizerId: league.user.userId,
     });
