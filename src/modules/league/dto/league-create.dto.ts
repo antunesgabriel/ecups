@@ -26,11 +26,7 @@ export class LeagueCreateDTO {
 
   @IsOptional()
   @IsNumber()
-  maxPlayers: number;
-
-  @IsOptional()
-  @IsNumber()
-  maxTeams: number;
+  maxParticipants: number;
 
   @IsNotEmpty({ message: 'Informe se a liga é para time ou player' })
   @IsBoolean()

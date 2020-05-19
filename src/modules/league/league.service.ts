@@ -132,10 +132,7 @@ export class LeagueService {
     leagueSelect.rules = leagueUpdateDTO.rules;
     leagueSelect.description = leagueUpdateDTO.description;
     leagueSelect.roundTrip = leagueUpdateDTO.roundTrip;
-    leagueSelect.maxPlayers = leagueUpdateDTO.maxPlayers;
-    leagueSelect.maxTeams = leagueSelect.forTeams
-      ? leagueUpdateDTO.maxTeams || null
-      : null;
+    leagueSelect.maxParticipants = leagueUpdateDTO.maxParticipants;
     leagueSelect.active = leagueUpdateDTO.active;
 
     const result = leagueDatesValidate(leagueUpdateDTO);
@@ -281,7 +278,23 @@ export class LeagueService {
     };
   }
 
-  async findById(leagueId: number): Promise<LeagueEntity | null> {
+  async findById(
+    leagueId: number,
+    userId: number = null,
+  ): Promise<LeagueEntity | null> {
+    if (userId) {
+      return await this._leagueRepository
+        .createQueryBuilder('league')
+        .leftJoinAndSelect('league.user', 'user')
+        .leftJoinAndSelect('league.game', 'game')
+        .leftJoinAndSelect('league.leagueType', 'leagueType')
+        .where('league.leagueId = :leagueId AND user.userId = :userId', {
+          leagueId,
+          userId,
+        })
+        .getOne();
+    }
+
     return await this._leagueRepository.findOne({
       where: { leagueId },
       relations: ['user', 'game', 'leagueType'],
