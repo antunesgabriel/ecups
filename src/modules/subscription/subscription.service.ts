@@ -42,6 +42,8 @@ export class SubscriptionService {
     if (like === 'organizer') {
       return await this.indexLikeAOrganizer(user);
     }
+
+    throw new BadRequestException('Tipo de listagem não permitido');
   }
 
   async create(subscriptionDTO: SubscriptionCreateDTO, authUser: IUser) {
@@ -128,15 +130,15 @@ export class SubscriptionService {
       subscription.status = true;
       await subscription.save();
 
-      const list = await this.indexLikeAOrganizer(user);
-      return { message: 'Inscrição aceita com sucesso!', list };
+      const subscriptions = await this.indexLikeAOrganizer(user);
+      return { message: 'Inscrição aceita com sucesso!', subscriptions };
     }
 
     subscription.status = false;
     await subscription.save();
 
-    const list = await this.indexLikeAOrganizer(user);
-    return { message: 'Inscrição recusada com sucesso!', list };
+    const subscriptions = await this.indexLikeAOrganizer(user);
+    return { message: 'Inscrição recusada com sucesso!', subscriptions };
   }
 
   private async indexLikeAPlayer(player: UserEntity): Promise<Subscription[]> {
