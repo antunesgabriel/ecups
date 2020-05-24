@@ -7,6 +7,9 @@ import {
   HttpStatus,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
+  Body,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { SubscriptionService } from './subscription.service';
@@ -18,7 +21,6 @@ import { User } from '@decorators/user.decorator';
 import { IUser } from '@utils/user.interface';
 import { SubscriptionCreateDTO } from './dto/subscription-create.dto';
 import { SubscriptionUpdateDTO } from './dto/subscription-update.dto';
-import { readSync } from 'fs';
 
 @Controller('subscription')
 export class SubscriptionController {
@@ -33,16 +35,17 @@ export class SubscriptionController {
     @User() authUser: IUser,
   ): Promise<Response> {
     const list = await this._subscriptionService.index(like, authUser);
-    return res.status(HttpStatus.OK).json(list);
+    return res.status(HttpStatus.OK).json({ list });
   }
 
   @Post()
   @UseGuards(JwtAuthGuard, UserGuard)
   @Roles('PLAYER', 'ADMIN')
+  @UsePipes(ValidationPipe)
   async store(
     @Res() res: Response,
     @User() authUser: IUser,
-    subscriptionDTO: SubscriptionCreateDTO,
+    @Body() subscriptionDTO: SubscriptionCreateDTO,
   ) {
     const subscriptions = await this._subscriptionService.create(
       subscriptionDTO,
@@ -60,7 +63,7 @@ export class SubscriptionController {
   async update(
     @Res() res: Response,
     @User() authUser: IUser,
-    subscriptionDTO: SubscriptionUpdateDTO,
+    @Body() subscriptionDTO: SubscriptionUpdateDTO,
   ) {
     const response = await this._subscriptionService.update(
       subscriptionDTO,
