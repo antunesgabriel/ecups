@@ -13,9 +13,10 @@ import { IUser } from '@utils/user.interface';
 import { UserEntity } from '@models/user.entity';
 import { SubscriptionCreateDTO } from './dto/subscription-create.dto';
 import { LeagueEntity } from '@models/league.entity';
-import { isAfter, parseISO } from 'date-fns';
+import { isAfter, parseISO, format } from 'date-fns';
 import { ParticipantService } from '@modules/participant/participant.service';
 import { SubscriptionUpdateDTO } from './dto/subscription-update.dto';
+import { NotificationService } from '@modules/notification/notification.service';
 
 @Injectable()
 export class SubscriptionService {
@@ -26,6 +27,7 @@ export class SubscriptionService {
     private readonly _leagueService: LeagueService,
     private readonly _teamService: TeamService,
     private readonly _participantService: ParticipantService,
+    private readonly _notificationService: NotificationService,
   ) {}
 
   async index(like: string, authUser: IUser): Promise<Subscription[]> {
@@ -130,15 +132,34 @@ export class SubscriptionService {
       subscription.status = true;
       await subscription.save();
 
-      const subscriptions = await this.indexLikeAOrganizer(user);
-      return { message: 'Inscrição aceita com sucesso!', subscriptions };
+      await this._notificationService.create({
+        message: `Sua inscrição no ${
+          league.league
+        } foi aceita! Se prepare para essa batalha que se inicia ${format(
+          league.leagueStart,
+          'dd/MM/yyyy HH:mm:ss',
+        )}`,
+        userId: league.forTeams ? participant.boss.userId : participant.userId,
+        link: '/player/subscriptions',
+      });
+
+      const requests = await this.indexLikeAOrganizer(user);
+      return { message: 'Inscrição aceita com sucesso!', requests };
     }
 
     subscription.status = false;
     await subscription.save();
 
-    const subscriptions = await this.indexLikeAOrganizer(user);
-    return { message: 'Inscrição recusada com sucesso!', subscriptions };
+    await this._notificationService.create({
+      message: `Sua inscrição no ${league.league} foi recusada, não fique triste há muito mais ligas vindo por ai, de uma olhada =D na home`,
+      userId: league.forTeams
+        ? subscription.team.boss.userId
+        : subscription.playerId,
+      link: '/',
+    });
+
+    const requests = await this.indexLikeAOrganizer(user);
+    return { message: 'Inscrição recusada com sucesso!', requests };
   }
 
   private async indexLikeAPlayer(player: UserEntity): Promise<Subscription[]> {
