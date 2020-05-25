@@ -168,13 +168,13 @@ export class SubscriptionService {
         .find({
           $or: [{ playerId: player.userId }, { teamId: player.team.teamId }],
         })
-        .sort({ createdAt: 'DESC' })
+        .sort({ createdAt: 1 })
         .exec();
     }
 
     return await this._subscriptionModel
       .find({ playerId: player.userId })
-      .sort({ createdAt: 'DESC' })
+      .sort({ createdAt: 1 })
       .exec();
   }
 
@@ -184,7 +184,7 @@ export class SubscriptionService {
         organizerId: organizator.userId,
         status: null,
       })
-      .sort({ createdAt: 'DESC' })
+      .sort({ createdAt: 1 })
       .exec();
   }
 
