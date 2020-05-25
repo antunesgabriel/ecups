@@ -95,7 +95,10 @@ export class LeagueService {
   }
 
   async show(leagueId: number): Promise<LeagueEntity> {
-    const league = await this._leagueRepository.findOne({ leagueId });
+    const league = await this._leagueRepository.findOne({
+      where: { leagueId },
+      relations: ['leagueType', 'game'],
+    });
     if (!league) {
       throw new BadRequestException('A liga informada não existe');
     }
