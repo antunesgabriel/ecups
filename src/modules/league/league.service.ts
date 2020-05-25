@@ -94,6 +94,14 @@ export class LeagueService {
     return { message: 'Liga criada com sucesso', league };
   }
 
+  async show(leagueId: number): Promise<LeagueEntity> {
+    const league = await this._leagueRepository.findOne({ leagueId });
+    if (!league) {
+      throw new BadRequestException('A liga informada não existe');
+    }
+    return league;
+  }
+
   async update(
     leagueId: number,
     leagueUpdateDTO: LeagueUpdateDTO,

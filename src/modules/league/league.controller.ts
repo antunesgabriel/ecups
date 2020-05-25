@@ -97,6 +97,18 @@ export class LeagueController {
     return res.status(HttpStatus.OK).json(feedback);
   }
 
+  @Get('show/:leagueId')
+  async show(
+    @Param('leagueId') leagueId: number,
+    @Res() res: Response,
+  ): Promise<Response> {
+    if (!Number(leagueId)) {
+      throw new BadRequestException('Tipo de dado invalido');
+    }
+    const league = await this._leagueService.show(leagueId);
+    return res.status(HttpStatus.OK).json({ league });
+  }
+
   @Get('all')
   async all(
     @Query('page') page = 1,
