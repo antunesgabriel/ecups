@@ -5,6 +5,7 @@ import { Participant } from './participant.model';
 import { LeagueService } from '@modules/league/league.service';
 import { ParticipantCreateDTO } from './dto/paticipant-create.dto';
 import { IUser } from '@utils/user.interface';
+import { UserEntity } from '@models/user.entity';
 
 @Injectable()
 export class ParticipantService {
@@ -40,7 +41,10 @@ export class ParticipantService {
   }
 
   async find(creatorId: number, leagueId: number): Promise<Participant | null> {
-    return await this._participantModel.findOne({ creatorId, leagueId });
+    const participant = await this._participantModel
+      .findOne({ creatorId, leagueId })
+      .exec();
+    return participant;
   }
 
   async findOrCreate(
@@ -57,5 +61,18 @@ export class ParticipantService {
     }
 
     return participants;
+  }
+
+  async count(user: UserEntity): Promise<number | null> {
+    const count = await this._participantModel
+      .find({
+        $or: [
+          { 'participants.userId': user.userId },
+          { 'participants.members.userId': user.userId },
+        ],
+      })
+      .exec();
+
+    return count.length;
   }
 }

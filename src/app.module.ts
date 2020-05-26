@@ -27,6 +27,7 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { InvitationModule } from './modules/invitation/invitation.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { ParticipantModule } from './modules/participant/participant.module';
+import { PlayerHomeModule } from './modules/player-home/player-home.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ParticipantModule } from './modules/participant/participant.module';
     InvitationModule,
     SubscriptionModule,
     ParticipantModule,
+    PlayerHomeModule,
   ],
 })
 export class AppModule {
