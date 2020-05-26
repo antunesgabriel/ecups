@@ -196,7 +196,10 @@ export class LeagueService {
     leagueId: number = null,
   ): Promise<Pagination<LeagueEntity> | any> {
     if (leagueId) {
-      const league = await this._leagueRepository.findOne({ leagueId });
+      const league = await this._leagueRepository.findOne({
+        where: { leagueId },
+        relations: ['leagueType', 'game', 'user'],
+      });
 
       if (!league) {
         throw new BadRequestException('Liga não encontrada');
