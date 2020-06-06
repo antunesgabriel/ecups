@@ -1,0 +1,26 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: ecups-pg
+    environment:
+      POSTGRES_USER: '${APP_DB_USER}'
+      POSTGRES_PASSWORD: '${APP_DB_PASS}'
+      POSTGRES_DB: '${APP_DB_NAME}'
+    ports:
+      - '${APP_DB_PORT}:5432'
+    volumes:
+      - './data/pg:/var/lib/postgresql/data'
+    restart: always
+  mongo:
+    image: mongo:4.2
+    container_name: ecups-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_USER}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_PASS}'
+      MONGO_INITDB_DATABASE: '${MONGODB_DBNAME}'
+    ports:
+      - '${MONGODB_PORT}:27017'
+    volumes:
+      - './data/mongo:/data/db'
+    restart: always
