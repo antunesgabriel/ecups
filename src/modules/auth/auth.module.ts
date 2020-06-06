@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '@models/user.entity';
+import { UserEntity } from '@entities/user.entity';
 
 const secret = process.env.APP_JWT_SECRET;
 const expiresIn = process.env.APP_JWT_EXPIRE;

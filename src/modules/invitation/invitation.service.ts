@@ -13,7 +13,7 @@ import { InvitationCreateDTO } from './dto/invitation-create.dto';
 import { IFeedback } from '@interfaces/feedback.interface';
 import { IUser } from '@utils/user.interface';
 import { InvitationUpdateDTO } from './dto/invitation-update.dto';
-import { TeamEntity } from '@models/team.entity';
+import { TeamEntity } from '@entities/team.entity';
 
 @Injectable()
 export class InvitationService {

@@ -5,7 +5,7 @@ import { Participant } from './participant.model';
 import { LeagueService } from '@modules/league/league.service';
 import { ParticipantCreateDTO } from './dto/paticipant-create.dto';
 import { IUser } from '@utils/user.interface';
-import { UserEntity } from '@models/user.entity';
+import { UserEntity } from '@entities/user.entity';
 
 @Injectable()
 export class ParticipantService {

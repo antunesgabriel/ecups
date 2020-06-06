@@ -99,7 +99,7 @@
     "@utils": "dist/utils",
     "@decorators": "dist/decorators",
     "@shared": "dist/shared",
-    "@models": "dist/models",
+    "@entities": "dist/entities",
     "@guards": "dist/guards",
     "@helpers": "dist/helpers",
     "@schemas": "dist/schemas",

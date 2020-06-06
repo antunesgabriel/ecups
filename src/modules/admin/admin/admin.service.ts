@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AdminRepository } from './admin.repository';
 import { AdminCreateDTO } from './dto/admin-create.dto';
 import { compare } from 'bcryptjs';
-import { RoleEntity } from '@models/role.entity';
 import { RoleService } from '../role/role.service';
 
 @Injectable()

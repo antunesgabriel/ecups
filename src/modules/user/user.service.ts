@@ -6,7 +6,7 @@ import {
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
 
-import { UserEntity } from '@models/user.entity';
+import { UserEntity } from '@entities/user.entity';
 import { UserRepository } from './user.repository';
 
 import { UserUpdateDTO } from './dto/user-update.dto';
@@ -15,10 +15,10 @@ import { IFeedback } from '@interfaces/feedback.interface';
 import { RoleService } from '@modules/admin/role/role.service';
 import { IUser } from '@utils/user.interface';
 import { AuthService } from '@modules/auth/auth.service';
-import { AddressEntity } from '@models/address.entity';
+import { AddressEntity } from '@entities/address.entity';
 import { subDays } from 'date-fns';
 import { calcPorcentage } from '@helpers/porcentage';
-import { TeamEntity } from '@models/team.entity';
+import { TeamEntity } from '@entities/team.entity';
 import { UpdateResult } from 'typeorm';
 
 @Injectable()

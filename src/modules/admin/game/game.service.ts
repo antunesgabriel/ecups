@@ -7,7 +7,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 
 import { GameRepository } from './game.repository';
-import { GameEntity } from '@models/game.entity';
+import { GameEntity } from '@entities/game.entity';
 import { IFeedback } from '@interfaces/feedback.interface';
 import { GameCreateDTO } from './dto/game-create.dto';
 import { GameUpdateDTO } from './dto/game-update.dto';

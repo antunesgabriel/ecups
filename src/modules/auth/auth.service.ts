@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { UserEntity } from '@models/user.entity';
+import { UserEntity } from '@entities/user.entity';
 import { classToPlain } from 'class-transformer';
 
 @Injectable()

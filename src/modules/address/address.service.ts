@@ -4,7 +4,7 @@ import { AddressRepository } from './address.repository';
 import { UserService } from '@modules/user/user.service';
 import { IUser } from '@utils/user.interface';
 import { AddressDTO } from './dto/address.dto';
-import { AddressEntity } from '@models/address.entity';
+import { AddressEntity } from '@entities/address.entity';
 
 @Injectable()
 export class AddressService {

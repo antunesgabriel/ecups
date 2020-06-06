@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
-import { TeamEntity } from '@models/team.entity';
-import { UserEntity } from '@models/user.entity';
+import { TeamEntity } from '@entities/team.entity';
+import { UserEntity } from '@entities/user.entity';
 
 export class Participant extends Document {
   leagueId: number;

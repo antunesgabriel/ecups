@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { LeagueTypeEntity } from '@models/leagueType.entity';
+import { LeagueTypeEntity } from '@entities/leagueType.entity';
 
 @EntityRepository(LeagueTypeEntity)
 export class LeagueTypeRepository extends Repository<LeagueTypeEntity> {}

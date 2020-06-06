@@ -7,7 +7,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 
 import { LeagueRepository } from './league.repository';
-import { LeagueEntity } from '@models/league.entity';
+import { LeagueEntity } from '@entities/league.entity';
 import { IUser } from '@utils/user.interface';
 import { IFeedback } from '@interfaces/feedback.interface';
 import { LeagueCreateDTO } from './dto/league-create.dto';

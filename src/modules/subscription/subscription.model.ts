@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
-import { LeagueEntity } from '@models/league.entity';
-import { TeamEntity } from '@models/team.entity';
-import { UserEntity } from '@models/user.entity';
+import { LeagueEntity } from '@entities/league.entity';
+import { TeamEntity } from '@entities/team.entity';
+import { UserEntity } from '@entities/user.entity';
 
 export class Subscription extends Document {
   league: LeagueEntity;

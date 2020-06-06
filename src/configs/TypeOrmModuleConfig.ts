@@ -1,11 +1,11 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '@models/user.entity';
-import { RoleEntity } from '@models/role.entity';
-import { LeagueEntity } from '@models/league.entity';
-import { LeagueTypeEntity } from '@models/leagueType.entity';
-import { GameEntity } from '@models/game.entity';
-import { AddressEntity } from '@models/address.entity';
-import { TeamEntity } from '@models/team.entity';
+import { UserEntity } from '@entities/user.entity';
+import { RoleEntity } from '@entities/role.entity';
+import { LeagueEntity } from '@entities/league.entity';
+import { LeagueTypeEntity } from '@entities/leagueType.entity';
+import { GameEntity } from '@entities/game.entity';
+import { AddressEntity } from '@entities/address.entity';
+import { TeamEntity } from '@entities/team.entity';
 
 export default TypeOrmModule.forRoot({
   type: 'postgres',

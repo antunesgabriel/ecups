@@ -8,7 +8,7 @@ import {
 
 import { IFeedback } from '@interfaces/feedback.interface';
 import { LeagueTypeRepository } from './league-type.repository';
-import { LeagueTypeEntity } from '@models/leagueType.entity';
+import { LeagueTypeEntity } from '@entities/leagueType.entity';
 import { LeagueTypeDTO } from './dto/league-type.dto';
 
 @Injectable()

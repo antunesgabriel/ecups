@@ -8,14 +8,14 @@ import { TeamRepository } from './team.repository';
 import { UserService } from '@modules/user/user.service';
 import { TeamDTO } from './dto/team.dto';
 import { IUser } from '@utils/user.interface';
-import { UserEntity } from '@models/user.entity';
+import { UserEntity } from '@entities/user.entity';
 import { IFeedback } from '@interfaces/feedback.interface';
 import {
   Pagination,
   IPaginationOptions,
   paginate,
 } from 'nestjs-typeorm-paginate';
-import { TeamEntity } from '@models/team.entity';
+import { TeamEntity } from '@entities/team.entity';
 
 @Injectable()
 export class TeamService {

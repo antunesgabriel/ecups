@@ -15,7 +15,7 @@
       "@utils/*": ["src/utils/*"],
       "@shared/*": ["src/shared/*"],
       "@guards/*": ["src/guards/*"],
-      "@models/*": ["src/models/*"],
+      "@entities/*": ["src/entities/*"],
       "@decorators/*": ["src/decorators/*"],
       "@helpers/*": ["src/helpers/*"],
       "@schemas/*": ["src/schemas/*"],
