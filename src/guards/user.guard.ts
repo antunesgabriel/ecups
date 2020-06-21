@@ -29,7 +29,7 @@ export class UserGuard implements CanActivate {
     }
 
     throw new UnauthorizedException(
-      'Vocề não possui permissão para acessar esta rota',
+      'Voce não possui permissão para acessar esta rota',
     );
   }
 }
