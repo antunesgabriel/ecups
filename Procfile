@@ -1,2 +1,1 @@
-web: npm i -g @nestjs/cli
-release: yarn start:deploy
+web: yarn start:deploy
