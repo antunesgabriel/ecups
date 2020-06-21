@@ -7,6 +7,9 @@ no final de semana <3.
 
 Sou um apaixonado por novos conhecimentos, então em cada projeto me encarreguei de testar novas tecnologias e me aperfeicoar em algumas que eu ja conhecia =D.
 
+## Preview: 
+[https://ecups.netlify.app/](https://ecups.netlify.app/)
+
 ## Partes do Ecups:
 
 - 1 [Api - Em Andamento - (NestJS, MongoDB, Postgresql, Typescript, Docker Compose)](https://github.com/antunesgabriel/ecups)
