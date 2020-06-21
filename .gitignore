@@ -1,5 +1,5 @@
 # compiled output
-
+/dist
 /node_modules
 
 # Logs
@@ -35,5 +35,4 @@ lerna-debug.log*
 
 .env
 uploads/
-.vscode
 data/*

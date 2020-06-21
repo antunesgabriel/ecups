@@ -1,1 +1,0 @@
-{"version":3,"file":"porcentage.js","sourceRoot":"","sources":["../../src/helpers/porcentage.ts"],"names":[],"mappings":";;AAAA,SAAgB,cAAc,CAAC,OAAe,EAAE,GAAW;IACzD,IAAI,OAAO,KAAK,CAAC,EAAE;QACjB,OAAO,GAAG,GAAG,GAAG,CAAC;KAClB;IAED,OAAO,CAAC,CAAC,GAAG,GAAG,OAAO,CAAC,GAAG,OAAO,CAAC,GAAG,GAAG,CAAC;AAC3C,CAAC;AAND,wCAMC"}

@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "askForPassword": false,
+            "database": "ecups",
+            "driver": "PostgreSQL",
+            "name": "ecups-heroku",
+            "password": "306a1e02d30fe90c5ff6739a852005351d714505abc2af5fb24009e24ef1abde",
+            "port": 5432,
+            "previewLimit": 50,
+            "server": "ec2-52-86-33-50.compute-1.amazonaws.com",
+            "username": "vbdejabavcnpwx"
+        }
+    ]
+}
