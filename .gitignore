@@ -35,4 +35,5 @@ lerna-debug.log*
 
 .env
 uploads/
+.vscode
 data/*

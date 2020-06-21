@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "start:deploy": "npm i -g @nestjs/cli && yarn build && yarn start:prod"
+    "start:deploy": "yarn build && yarn start:prod"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
