@@ -18,7 +18,7 @@ export class AuthController {
   @Post()
   @UsePipes(ValidationPipe)
   @UseGuards(AuthGuard('local'))
-  async player(@Request() req, @Req() login: LoginDTO): Promise<any> {
+  async store(@Request() req, @Req() login: LoginDTO): Promise<any> {
     return await this._authService.loginUser(req.user);
   }
 }
