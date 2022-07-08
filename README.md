@@ -12,9 +12,8 @@ Sou um apaixonado por novos conhecimentos, então em cada projeto me encarreguei
 
 ## Partes do Ecups:
 
-- 1 [Api - Em Andamento - (NestJS, MongoDB, Postgresql, Typescript, Docker Compose)](https://github.com/antunesgabriel/ecups)
-- 2 [Front Web - Em Andamento - (ReactJS, Material-ui)](https://github.com/antunesgabriel/ecups-front)
-- 3 [App - Em Andamento - (React Native, Typescript, React Native UI Kitten, Git Flow)](https://github.com/antunesgabriel/ecups-app)
+- 1 [Api - (NestJS, MongoDB, Postgresql, Typescript, Docker Compose)](https://github.com/antunesgabriel/ecups)
+- 2 [Front Web - (ReactJS, Material-ui)](https://github.com/antunesgabriel/ecups-front)
 
 ## Preparando Ambiente
 
